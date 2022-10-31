@@ -22,13 +22,13 @@ CellCosmo rna -c rna_pipeline.cfg
 ```
 
 #### 4.Detailed docs can be found in manual
-[sample](docs/rna/sample.md)
-[barcode](docs/rna/barcode.md)
-[cutadapt](docs/rna/cutadapt.md)
-[star](docs/rna/star.md)
-[featureCounts](docs/rna/featureCounts.md)
-[count](docs/rna/count.md)
-[analysis](docs/rna/analysis.md)
+[sample](docs/rna/sample.md)  
+[barcode](docs/rna/barcode.md)  
+[cutadapt](docs/rna/cutadapt.md)  
+[star](docs/rna/star.md)  
+[featureCounts](docs/rna/featureCounts.md)  
+[count](docs/rna/count.md)  
+[analysis](docs/rna/analysis.md)  
 
 ## Support
 The officially supported release binaries are available at: (http://www.10kgenomics.com/)
