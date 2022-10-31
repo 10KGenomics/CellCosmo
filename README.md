@@ -30,4 +30,6 @@ CellCosmo rna -c rna_pipeline.cfg
 [count](docs/rna/count.md)
 [analysis](docs/rna/analysis.md)
 
+## Support
+The officially supported release binaries are available at: (http://www.10kgenomics.com/)
 
