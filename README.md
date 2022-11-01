@@ -4,7 +4,7 @@ SingleCell RNA-seq Data analysis Software
 CellCosmo is an open source and bioinfomatics analysis pipeline to high-throughput analysis Perseus Series single-cell RNA datasets.
 
 ## Installation
-......(包括安装python版本、第三方开源软件、必备其他一些包)
+[详见](docs/install.md)
 
 ## Start Running CellCosmo
 #### 1. Build References  genomeDir for Homo sapiens and Mus musculus
