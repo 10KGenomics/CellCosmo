@@ -1,6 +1,6 @@
 # Introduction
 CellCosmo is an open source and bioinfomatics analysis pipeline to high-throughput analysis Perseus Series single-cell RNA datasets.
-
+*[  ]Propose
 # Installation
 Installation tutorial manual [here](docs/install.md)
 
