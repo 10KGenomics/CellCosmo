@@ -1,4 +1,5 @@
-# 10K scRNA-seq Data Analysis 
+# CellCosmo
+
 SingleCell RNA-seq Data analysis Software
 ## Introduction
 CellCosmo is an open source and bioinfomatics analysis pipeline to high-throughput analysis Perseus Series single-cell RNA datasets.
