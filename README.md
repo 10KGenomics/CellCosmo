@@ -6,7 +6,7 @@ Installation tutorial manual [here](docs/install.md)
 
 # Start Running CellCosmo
 ## 1. Build References  genomeDir for Homo sapiens or Mus musculus
-[Build References genomeDir](docs/install.md)
+[Build References genomeDir](docs/Build_References_genomeDir.md)
 
 ## 2.Generate configuration file(rna_pipeline.cfg)
 
