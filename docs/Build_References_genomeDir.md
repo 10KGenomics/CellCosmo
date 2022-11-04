@@ -1,8 +1,4 @@
-# Quick start
-本软件用来分析RNA 单细胞分析
-
-# Usage Example
-## Make a rna genomeDir
+# Make a rna genomeDir
 
 - Construction of human reference genome
 
