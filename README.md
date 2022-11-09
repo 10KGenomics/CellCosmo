@@ -18,7 +18,7 @@ Installation tutorial manual [here](docs/install.md)
 
 ## 2.Generate configuration file(rna_pipeline.cfg)
 
-生成配置文件
+generate configuration file
 
 `CellCosmo rna pipeline -g`
 
