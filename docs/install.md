@@ -5,11 +5,11 @@
 ```bash
 wget https://github.com/caijingtao1993/CellCOSMO_test/edit/main/dep_tools.txt
 # dep_tools.txt file 
-# bioconda::star=2.7.10a				    # STAR
-# bioconda::picard=2.18.17          # picard
-# bioconda::subread=2.0.1           # featureCounts
+# bioconda::star=2.7.10a  # STAR
+# bioconda::picard=2.18.17  # picard
+# bioconda::subread=2.0.1 # featureCounts
 # bioconda::ucsc-gtftogenepred=377  # gtfToGenePred
-# bioconda::samtools=1.12           # samtools
+# bioconda::samtools=1.12 # samtools
 
 ENV_NAME=CellCosmo
 conda create -n $ENV_NAME -y --file dep_tools.txt
