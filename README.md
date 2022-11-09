@@ -18,9 +18,9 @@ Build References genomeDir tutorial manual [here](docs/Build_References_genomeDi
 
 ## 2.Generate configuration file(rna_pipeline.cfg)
 Run the following command to get the cfg file:
-(```bash
+```bash
 CellCosmo rna pipeline -g
-```)
+```
 
 [配置文件(`rna_pipeline.cfg`)说明](docs/rna/pipeline_config.md)
 ## 3.Run pipeline
