@@ -17,9 +17,7 @@ Installation tutorial manual [here](docs/install.md)
 Build References genomeDir tutorial manual [here](docs/Build_References_genomeDir.md)
 
 ## 2.Generate configuration file(rna_pipeline.cfg)
-
-generate configuration file
-
+Run the following command to get the cfg file:
 `CellCosmo rna pipeline -g`
 
 [配置文件(`rna_pipeline.cfg`)说明](docs/rna/pipeline_config.md)
