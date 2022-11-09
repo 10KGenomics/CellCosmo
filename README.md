@@ -22,7 +22,7 @@ Run the following command to get the cfg file:
 CellCosmo rna pipeline -g
 ```
 
-[配置文件(`rna_pipeline.cfg`)说明](docs/rna/pipeline_config.md)
+[配置文件(`rna_pipeline.cfg`)说明](docs/rna/pipeline_config.cfg)
 ## 3.Run pipeline
 ```bash
 CellCosmo rna -c rna_pipeline.cfg
