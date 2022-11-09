@@ -19,7 +19,7 @@ conda install mamba -y
 mamba create -n $ENV_NAME -y --file dep_tools.txt
 ```
 
-## Installing CellCosmo
+## Step 2: Installing CellCosmo software
 ```bash
 # Download the release package
 wget {todo after release the source code}
