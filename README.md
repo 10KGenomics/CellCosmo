@@ -1,7 +1,13 @@
 # Introduction
 CellCosmo is an open source and bioinfomatics analysis pipeline to high-throughput analysis Perseus Series single-cell RNA datasets.
 * Propose
- * text
+  A collection of bioinfomatics analysis pipelines to process single cell sequencing data generated with Perseus Series single-cell RNA products.
+* Language
+  Python3(>=3.9.*) and R scripts
+* Hardware/Software environment
+  * x86-64 compatible processors.
+  * require at least 50GB of RAM and 4 CPU.
+  * centos 7.x 64-bit operating system (Linux kernel 3.10.0, compatible with higher software and hardware configuration).
 # Installation
 Installation tutorial manual [here](docs/install.md)
 
