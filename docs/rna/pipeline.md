@@ -47,7 +47,7 @@ Options:
 
 ## Detail
 
-#### 1. 生成配置命令
+#### 1. Generate configuration file(rna_pipeline.cfg)
 
 ```bash
 CellCosmo rna pipeline -g
@@ -55,9 +55,9 @@ CellCosmo rna pipeline -g
 # which name is rna_pipeline.cfg
 ```
 
-- 关于配置文件说明，详见[rna_pipeline.cfg](rna_pipeline.cfg)
+- configuration documentation, see[rna_pipeline.cfg](rna_pipeline.cfg)
 
-#### 2. 使用配置文件运行流程
+#### 2. Run pipeline
 
 ```bash
 CellCosmo rna pipeline -c rna_pipeline.cfg
