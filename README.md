@@ -30,12 +30,17 @@ CellCosmo rna -c rna_pipeline.cfg
 ## 4.Detailed docs can be found in manual
 * Sample sequencing data preparation  
 [sample](docs/rna/sample.md)  
-* Demultiplexing FASTQ files with barcode
+* Demultiplexing FASTQ files with barcode  
 [barcode](docs/rna/barcode.md)  
+* mRNA sequence Quality control  
 [cutadapt](docs/rna/cutadapt.md)  
+* Demultiplexing FASTQ files with barcode  
 [star](docs/rna/star.md)  
+* Demultiplexing FASTQ files with barcode  
 [featureCounts](docs/rna/featureCounts.md)  
+* Demultiplexing FASTQ files with barcode  
 [count](docs/rna/count.md)  
+* Demultiplexing FASTQ files with barcode  
 [analysis](docs/rna/analysis.md)  
 
 # Support
