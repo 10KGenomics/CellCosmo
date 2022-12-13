@@ -5,7 +5,7 @@ Options:
   -s, --sample TEXT            Sample name.  [required]
   --input TEXT                 BAM file path.  [required]
   -o, --outdir TEXT            Output directory.  [required]
-  --gtf-type TEXT              Specify feature type in GTF annotation
+  --gtf-type TEXT              Specify feature type (exon or gene) in GTF annotation
                                [default: exon]
   --genomeDir TEXT             Genome directory.  [required]
   -t, --thread INTEGER         Thread to use.  [default: 4]
