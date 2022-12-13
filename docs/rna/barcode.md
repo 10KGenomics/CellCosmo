@@ -1,9 +1,10 @@
 ## Features
 ---
-
+- Demultiplex barcodes.
 ## Output
 ---
-
+- `result/{sample}_2.fq(.gz)` Demultiplexed R2 reads. Barcode and UMI are contained in the read name. The format of 
+the read name is `{barcode}_{UMI}_{read ID}`.
 ## Arguments
 ---
 ```bash
