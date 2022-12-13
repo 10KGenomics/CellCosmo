@@ -28,8 +28,8 @@ CellCosmo rna -c rna_pipeline.cfg
 ```
 
 ## 4.Detailed docs can be found in manual
-* Propose
-[sample](docs/rna/sample.md) 
+* Propose  
+* [sample](docs/rna/sample.md)  
 * Propose
 [barcode](docs/rna/barcode.md)  
 [cutadapt](docs/rna/cutadapt.md)  
