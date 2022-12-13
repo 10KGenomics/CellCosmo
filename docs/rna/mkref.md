@@ -1,6 +1,6 @@
 ## Features
 ---
-通过参考基因组文件和gtf文件构建索引
+Make a rna References genomeDir
 ## Output
 ---
 `genome.config` config file
