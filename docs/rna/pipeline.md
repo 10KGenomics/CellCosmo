@@ -55,7 +55,7 @@ CellCosmo rna pipeline -g
 # which name is rna_pipeline.cfg
 ```
 
-- configuration documentation, see[rna_pipeline.cfg](rna_pipeline.cfg)
+- configuration documentation, see [rna_pipeline.cfg](rna_pipeline.cfg)
 
 #### 2. Run pipeline
 
