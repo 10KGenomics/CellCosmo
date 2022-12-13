@@ -28,9 +28,9 @@ CellCosmo rna -c rna_pipeline.cfg
 ```
 
 ## 4.Detailed docs can be found in manual
-* Propose  
-* [sample](docs/rna/sample.md)  
-* Propose
+* Sample sequencing data preparation  
+[sample](docs/rna/sample.md)  
+* Demultiplexing FASTQ files with barcode
 [barcode](docs/rna/barcode.md)  
 [cutadapt](docs/rna/cutadapt.md)  
 [star](docs/rna/star.md)  
