@@ -28,20 +28,20 @@ CellCosmo rna -c rna_pipeline.cfg
 ```
 
 ## 4.Detailed docs can be found in manual
-* Sample sequencing data preparation  
-[sample](docs/rna/sample.md)  
-* Demultiplexing FASTQ files with barcode  
-[barcode](docs/rna/barcode.md)  
-* mRNA sequence Quality control  
-[cutadapt](docs/rna/cutadapt.md)  
-* Demultiplexing FASTQ files with barcode  
-[star](docs/rna/star.md)  
-* Demultiplexing FASTQ files with barcode  
-[featureCounts](docs/rna/featureCounts.md)  
-* Demultiplexing FASTQ files with barcode  
-[count](docs/rna/count.md)  
-* Demultiplexing FASTQ files with barcode  
-[analysis](docs/rna/analysis.md)  
+* (1) Sample sequencing data preparation  
+  [CellCosmo rna sample](docs/rna/sample.md)  
+* (2) Demultiplexing FASTQ files with barcode  
+  [CellCosmo rna barcode](docs/rna/barcode.md)  
+* (3) RNA sequence Quality control  
+  [CellCosmo rna cutadapt](docs/rna/cutadapt.md)  
+* (4) Rna alignment  
+  [CellCosmo rna star](docs/rna/star.md)  
+* (5) Quantification of gene  
+  [CellCosmo rna featureCounts](docs/rna/featureCounts.md)  
+* (6) Cell calling  
+  [CellCosmo rna count](docs/rna/count.md)  
+* (7) Cell cluster and web report result output  
+  [CellCosmo rna analysis](docs/rna/analysis.md)  
 
 # Support
 The officially supported release binaries are available at: (http://www.10kgenomics.com/)
