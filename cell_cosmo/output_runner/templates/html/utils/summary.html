@@ -1,0 +1,57 @@
+<div class="abc box" style="max-width:1000px;margin:auto ;display: flex;margin-bottom: 50px;" >
+    <div  style="width: 48%;display: inline-block;margin-top:0px;">
+        <div>
+             <!--     show summary   -->
+            {% if summary_summary is defined %}
+            {% set step_summary = summary_summary %}
+            {% set catalogue_id = 'summary_summary' %}
+
+            {% for (key) in step_summary.metric_list %}
+                <div style='border: 1px solid rgba(0,0,0,.2);border-radius: 5px;margin: 25px 0px;text-align:center'>
+                    <p style="margin: 8px 0px;font-size:42px;color:#853399"><b>{{key.value|safe}}</b></p>
+                    <p style="margin: 8px 0px;">{{key.name|safe}}</p>
+                </div>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+
+        <!--     show Mapping   -->
+        {% if sequence_summary is defined %}
+        {% set step_summary = sequence_summary %}
+        {% set catalogue_id = 'step' %}
+        {% include "html/utils/step.html" %}
+        {% endif %}
+
+        <!--     show Mapping   -->
+        {% if star_summary is defined %}
+        {% set step_summary = star_summary %}
+        {% set catalogue_id = 'catalogue_star' %}
+        {% include "html/rna/star.html" %}
+        {% endif %}
+
+        <!-- show       Quantification-->
+<!--        {% if featureCounts_summary is defined%}-->
+<!--        {% set step_summary = featureCounts_summary %}-->
+<!--        {% set catalogue_id = 'catalogue_featureCounts' %}-->
+<!--        {% include "html/utils/step.html" %}-->
+<!--        {% endif %}-->
+    </div>
+
+    <div  style="width :48% ;padding-left:20px;display: inline-block;margin-top:0px;">
+        <!--     show Cell   -->
+        {% if count_summary is defined %}
+        {% set step_summary = count_summary %}
+        {% set catalogue_id = 'catalogue_Count' %}
+        {% include "html/rna/count.html"%}
+        {% endif %}
+
+        <!--     show Sample   -->
+        {% if sample_summary is defined %}
+        {% set step_summary = sample_summary %}
+        {% set catalogue_id = 'catalogue_sample' %}
+        {% include "html/utils/step.html" %}
+        {% endif %}
+    </div>
+</div>
+

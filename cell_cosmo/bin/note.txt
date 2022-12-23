@@ -1,0 +1,15 @@
+# GAR_HOME=${WD}/tenk_test2/result/Drop-seq_tools-2.5.1/jar
+# ---------------------------------
+# DetectBeadSubstitutionErrors
+# java -jar ${GAR_HOME}/dropseq.jar DetectBeadSynthesisErrors \
+# -I 20220303HXY6_Aligned.sortedByCoord.out.bam \
+# -O dropseq_out.bam \
+# --OUTPUT_STATS dropseq_output_stats.txt \
+# --SUMMARY dropseq_summary.txt \
+# --REPORT dropseq_report.txt
+#
+#
+# java -jar ${GAR_HOME}/dropseq.jar DetectBeadSubstitutionErrors \
+# -I 20220303HXY6_Aligned.sortedByCoord.out.bam \
+# -O a1_out.bam \
+# --OUTPUT_REPORT a1_output_stats.txt

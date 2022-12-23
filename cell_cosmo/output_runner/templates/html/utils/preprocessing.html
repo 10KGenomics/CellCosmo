@@ -1,0 +1,23 @@
+{% if summary_summary is defined %}
+{% set step_summary = summary_summary %}
+{% set catalogue_id = 'summary_summary' %}
+{% include "html/utils/summary_summary.html" %}
+{% endif %}
+
+{% if sample_summary is defined %}
+{% set step_summary = sample_summary %}
+{% set catalogue_id = 'catalogue_sample' %}
+{% include "html/utils/step.html"%}
+{% endif %}
+
+{% if barcode_summary is defined %}
+{% set step_summary = barcode_summary %}
+{% set catalogue_id = 'catalogue_barcode' %}
+{% include "html/utils/step.html"%}
+{% endif %}
+
+{% if cutadapt_summary is defined %}
+{% set step_summary = cutadapt_summary %}
+{% set catalogue_id = 'catalogue_cutadapt' %}
+{% include "html/utils/step.html"%}
+{% endif %}

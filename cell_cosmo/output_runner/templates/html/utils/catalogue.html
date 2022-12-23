@@ -1,0 +1,79 @@
+<div class="catalogue" >
+    {% set ind=0 %}
+    {% if sample_summary is defined %}
+        {% set ind=ind+1 %}
+        <a class="catalogue_item"  href="#catalogue_sample">{{ind}} Sample</a>
+    {% endif %}
+
+    {% if barcode_summary is defined%}
+        {% set ind=ind+1 %}
+        <a class="catalogue_item"  href="#catalogue_barcode">{{ind}} Demultiplexing</a>
+    {% endif %}
+
+    {% if cutadapt_summary is defined %}
+    {% set ind=ind+1 %}
+        <a class="catalogue_item"  href="#catalogue_cutadapt">{{ind}} Trimming</a>
+    {% endif %}
+
+    {% if star_summary is defined %}
+    {% set ind=ind+1 %}
+        <a class="catalogue_item"  href="#catalogue_star">{{ind}} Mapping</a>
+    {% endif %}
+
+    {% if featureCounts_summary is defined %}
+    {% set ind=ind+1 %}
+        <a class="catalogue_item"  href="#catalogue_featureCounts">{{ind}} featureCounts</a>
+    {% endif %}
+
+    {% if count_summary is defined %}
+    {% set ind=ind+1 %}
+        <a class="catalogue_item"  href="#catalogue_Count">{{ind}} Cells</a>
+    {% endif %}
+
+    {% if analysis_summary is defined %}
+    {% set ind=ind+1 %}
+        <a class="catalogue_item"  href="#catalogue_analysis">{{ind}} Analysis</a>
+    {% endif %}
+</div>
+<script>
+    window.onload = function() {
+        var libtn = $(".catalogue_item")
+        console.log(libtn)
+        for (var i = 0; i < libtn.length; i++) {
+            libtn[i].index = i;
+            libtn[i].onclick = function() {
+                for (var i = 0; i < libtn.length; i++) {
+                    libtn[i].className = "catalogue_item";
+                }
+                this.className = "catalogue_item select_item";
+            }
+        }
+    }
+</script>
+<style>
+.catalogue{
+    position: fixed;
+    left: 20px;
+    top: 150px;
+    width: 12%;
+    border-radius: 15px;
+    overflow: auto;
+    border: 1px solid #b0b0b0;
+}
+.catalogue_item{
+    display:block;
+    padding: 8px;
+    text-decoration:none;
+    color:#000;
+}
+.select_item{
+    background:#853399;
+    padding: 8px;
+    color:#fff
+}
+.catalogue_item:hover{
+    background:#853399;
+    padding: 8px;
+    color:#fff
+}
+</style>

@@ -1,0 +1,42 @@
+<div>
+    <h2>
+    <div class="sub_title"  id="{{catalogue_id}}" style="display: inline-block;">{{ step_summary.display_title}} </div><i class="icon-help-circled" onClick="toggle1(this.parentNode.parentNode)" style="cursor:pointer;"></i></h2>
+  <div>{% include "html/utils/help_info.html" %}</div>
+
+  {% include "html/utils/col1_metrics.html" %}
+
+  <div id="myDivUMI" style="float: left; margin-left: 3%; margin-top: 1%;margin-right:0%; ">
+    {{ step_summary.chart|safe }}
+  </div>
+    {% if step_summary.qc_plot is defined %}
+        <div >
+            <select id="qc_plotSelect" style="padding: 4px 10px;" onchange="qc_plotSelectValue()">
+                {% for (key) in step_summary.qc_plot.option %}
+                    <option value="{{key.class_name}}">{{key.title}}</option>
+                {% endfor %}
+            </select>
+            {% for (key) in step_summary.qc_plot.plot_data %}
+                <div class="{{key.class_name}}" style="width:60%;display:none;margin-left: 3%; margin-top: 1%;margin-right:0%;">
+                    {{key.data|safe}}
+                </div>
+            {% endfor %}
+            <script type="text/javascript">
+                 qc_plotSelectValue()
+                 function qc_plotSelectValue(){
+                    var mySelect=document.getElementById("qc_plotSelect");
+                    var index=mySelect.selectedIndex ;
+                    categoryKey=mySelect.options[index].value
+                    let data={{step_summary.qc_plot.option|safe }}
+                    for(let i of data){
+                        if(categoryKey ==i.class_name){
+                            $('.'+i.class_name).css('display','block');
+                        }else{
+                            $('.'+i.class_name).css('display','none');
+                        }
+                    }
+                 }
+            </script>
+        </div>
+    {% endif %}
+    <div class="clear" ></div>
+</div>

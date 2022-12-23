@@ -1,0 +1,109 @@
+{% include "html/utils/start.html"%}
+
+    <ul id="container1"  style="text-align:center;">
+        <li class="container1_li select">Summary</li>
+        <li class="container1_li ">Analysis</li>
+    </ul>
+    <script>
+        window.onload = function() {
+            var libtn = $(".container1_li")
+            for (var i = 0; i < libtn.length; i++) {
+                libtn[i].index = i;
+                libtn[i].onclick = function() {
+                    for (var i = 0; i < libtn.length; i++) {
+                        libtn[i].className = "container1_li";
+                    }
+                    this.className = "container1_li select";
+
+                    if($(this).text()=='Analysis'){
+                        $(".report_tab_analysis").css('display','block');
+                        $(".report_tab_summary").css('display','none');
+                    }else{
+                        $(".report_tab_analysis").css('display','none');
+                        $(".report_tab_summary").css('display','block');
+                    }
+                }
+            }
+            $(".report_tab_analysis").css('display','none');
+        }
+    </script>
+    <style>
+        #container1{
+            margin-bottom: 0;
+            overflow: auto;
+            padding-left: 0px;
+        }
+        .container1_li{
+            position: relative;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #b0b0b0;
+            border-bottom:0px;
+            list-style-type:none;
+            padding: 8px;
+            float:left;
+            display: block;
+            text-decoration:none;
+            color:#000;
+            margin-right:3px;
+            cursor: pointer;
+        }
+        .select{
+            background:#853399;
+            padding: 8px;
+            color:#fff
+        }
+        .display_show{
+            display: show;
+        }
+        .display_none{
+            display: none;
+        }
+        .sub_title{
+            font-weight: 900;
+        }
+    </style>
+    <div class="report_tab_summary" >
+        {% include "html/utils/summary.html" %}
+    </div>
+    <div  class="report_tab_analysis ">
+        {% if analysis_summary is defined %}
+        {% set step_summary = analysis_summary %}
+        {% set catalogue_id = 'catalogue_analysis' %}
+        {% include "html/rna/analysis.html"%}
+        {% endif %}
+
+        {#
+        {% if barcode_summary is defined %}
+        {% set step_summary = barcode_summary %}
+        {% set catalogue_id = 'catalogue_barcode' %}
+        {% include "html/utils/step.html"%}
+        {% endif %}
+
+        {% if cutadapt_summary is defined %}
+        {% set step_summary = cutadapt_summary %}
+        {% set catalogue_id = 'catalogue_cutadapt' %}
+        {% include "html/utils/step.html"%}
+        {% endif %}
+
+        {% if star_summary is defined %}
+        {% set step_summary = star_summary %}
+        {% set catalogue_id = 'catalogue_star' %}
+        {% include "html/rna/star.html" %}
+        {% endif %}
+
+        {% if featureCounts_summary is defined%}
+        {% set step_summary = featureCounts_summary %}
+        {% set catalogue_id = 'catalogue_featureCounts' %}
+        {% include "html/utils/step.html" %}
+        {% endif %}
+
+        {% if count_summary is defined %}
+        {% set step_summary = count_summary %}
+        {% set catalogue_id = 'catalogue_Count' %}
+        {% include "html/rna/count.html"%}
+        {% endif %} #}
+
+
+    </div>
+{% include "html/utils/end.html"%}
+

@@ -1,0 +1,17 @@
+click>=8.0.0
+cutadapt==3.7
+pysam>=0.18.0
+scipy>=1.5.0
+numpy>=1.21.0
+jinja2>=2.10
+pandas>=1.2.5
+plotly>=4.14.3
+plotnine>=0.8.0
+matplotlib>=3.3.0
+scanpy==1.8.2
+sqlalchemy==1.4.40
+leidenalg
+louvain
+xopen
+tqdm
+environs

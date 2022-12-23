@@ -1,0 +1,13 @@
+<div class="description" style="display: none;">
+
+    {% for item in step_summary.help_content %}
+    <p style="padding-top:10px;line-height: 0px !important;"><b style="line-height: 28px !important;">{{ item.name|e }}</b> <br> <span style="font-size:14px;line-height:20px">{{ item.content }}</span></p>
+    {% endfor %}
+
+    {% for item in step_summary.metric_list %} 
+        {% if item.help_info %}
+            <p style="padding-top:10px;line-height: 0px !important;"><b style="line-height: 28px !important;">{{ item.name|e }}  </b> <br><span style="font-size:14px;line-height:20px">{{ item.help_info|safe }}</span></p>
+        {% endif %}  
+    {% endfor %}
+
+</div>

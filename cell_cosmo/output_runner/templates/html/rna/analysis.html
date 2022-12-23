@@ -1,0 +1,448 @@
+<script> {% include "./js/jquery.dataTables.min.js" %} </script>
+<script> {% include "./js/dataTables.jqueryui.min.js" %} </script>
+
+<script> {% include "./js/jszip.min.js" %} </script>
+<script> {% include "./js/dataTables.buttons.min.js" %} </script>
+<script> {% include "./js/buttons.flash.min.js" %} </script>
+<script> {% include "./js/buttons.html5.min.js" %} </script>
+<script> {% include "./js/buttons.print.min.js" %} </script>
+<script> {% include "./js/plotly-2.12.1.min.js" %} </script>
+<script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+
+<style> {% include "./css/jquery-ui.css" %}</style>
+<style> {% include "./css/dataTables.jqueryui.min.css" %}</style>
+<style> {% include "./css/buttons.dataTables.min.css" %}</style>
+
+
+<div class="abc box" style="max-width:1000px;margin:auto ;margin-bottom: 50px;" >
+    <h2>
+        <div class="sub_title"  id="{{catalogue_id}}" style="display: inline-block;">{{ step_summary.display_title}}</div>
+        <i class="icon-help-circled" onClick="toggle1(this.parentNode.parentNode)" style="cursor:pointer;"></i>
+    </h2>
+    <div >
+        {% include "html/utils/help_info.html" %}
+        <div>
+          <div id="line_saturation" style="float: left;width: 47%; margin-left: 3%; margin-top: 1%;margin-right:0%;">
+            {{step_summary.line_saturation|safe}}
+          </div>
+
+          <div id="line_median" style="float: left;width: 47%; margin-left: 3%; margin-top: 1%;margin-right:0%;">
+            {{step_summary.line_median|safe}}
+          </div>
+        </div>
+        <div>
+            <select id="categorySelect" style="width:150px;padding: 4px 10px;" onchange="getcategorySelectValue()">
+                {% for (key) in step_summary %}
+                   {% if  key=='tsne' or key=='umap' %}
+                    <option value="{{key}}">{{key}}</option>
+                   {% endif %}
+                {% endfor %}
+            </select>
+            <select id="step_summarySelect" style="width:230px;padding: 4px 10px;" onchange="getSelectValue()">
+                {% for (key) in step_summary["tsne"].cluster.KEY %}
+                    <option value="{{key}}">{{key}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="float: left; margin-left: 3%; margin-top: 1%;margin-right:0%; width: 47%">
+            <div id="t_SNE_g" style="height:100%; width:100%;"></div>
+            <script type="text/javascript"></script>
+
+        </div>
+        <div style="float: left; margin-left: 3%; margin-top: 1%;margin-right:0%; width: 47%">
+
+            <div id="t_SNE_c" style="height:100%; width:100%;"></div>
+
+        </div>
+        <hr/>
+        {% if  step_summary['tsne'].table_dict or step_summary['umap'].table_dict %}
+            <div>
+                <p>{{step_summary['tsne'].table_dict.title|safe}}</p>
+                <!--<p onclick="recovery_fun()" style="width: 50px;float: right;background: #853399;padding: 5px 10px;border-radius: 10px;margin-right: 20px;color: #fff;text-align: center;">恢复</p>-->
+                <div style="overflow-y: scroll;overflow-x: scroll;max-height: 400px;width: 100%;padding-bottom: 20px;">
+                    <table id="table" style='border-collapse:collapse; margin: 0 auto;border: 1px solid #f1f1f1;' border="1px"></table>
+                </div>
+                <p style='text-align:right'>
+                    <a style='padding: 5px 8px;cursor: pointer;color: #ffffff;border-radius: 3px;background: #853399;' onclick="table('up',1)">首页</a>
+                    <a style='padding: 5px 8px;cursor: pointer;color: #ffffff;border-radius: 3px;background: #853399;' onclick="table('up')"><<</a>
+                    <span> 当前第<span id='page_num'>1</span>页 </span>
+                    <span> 共<span id='last_page'>1</span>页 </span>
+                    <a style='padding: 5px 8px;cursor: pointer;color: #ffffff;border-radius: 3px;background: #853399;' onclick="table('next')">>></a>
+                    <a style='padding: 5px 8px;cursor: pointer;color: #ffffff;border-radius: 3px;background: #853399;' onclick="table({'last')">末页</a>
+                    <input style='width:50px' type="number" id='inp' onkeypress="table('inp')"  value="1"  >
+                    <select id="selectPage" onchange="pagesize()">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <a style='padding: 5px 8px;cursor: pointer;color: #ffffff;border-radius: 3px;background: #853399;' onclick="table('inp')">跳转</a>
+                </p>
+            </div>
+        {% endif %}
+        <script type="text/javascript">
+                var page_size=10;
+                var page_num=1;
+                var page=1;
+                var last_page=1;
+                var key=''
+                var categoryKey=''
+                var tsne_gene_data= null
+                var data= null
+                var all_data= {tsne:{{step_summary['tsne']|safe}},umap:{{step_summary['umap']|safe}}}
+                var table_data_all={}
+                function tsne_gene_show(){
+                  let plotly_data=[{
+                    legendgroup: '',
+                    hovertemplate: "(%{x}，%{y})<br>UMI_Counts=%{marker.color}<extra></extra>",
+                    marker: {
+                        color:tsne_gene_data.UMI_Counts,
+                        coloraxis: "coloraxis",
+                        opacity: 0.9,
+                        size: tsne_gene_data.size,
+                        "sizemode": "area",
+                        "sizeref": 0.25,
+                        "symbol": "circle",
+                        "colorscale": "Jet",
+                        "colorbar": {
+                            "title": "UMI counts"
+                        }
+                    },
+                    mode: "markers",
+                    name: 'gene',
+                    "showlegend": false,
+                    x: tsne_gene_data.X,
+                    xaxis: "x",
+                    y: tsne_gene_data.Y,
+                    yaxis: 'y',
+                    type: "scattergl"
+                    }]
+                    PlotlyRender('t_SNE_g',categoryKey+' Projection of Cells Colored by UMI Counts',plotly_data,categoryKey+'_1',categoryKey+'2','UMI_Counts')
+                }
+                 getcategorySelectValue()
+                 function getcategorySelectValue(){
+                    var mySelect=document.getElementById("categorySelect");
+                    var index=mySelect.selectedIndex ;
+                    categoryKey=mySelect.options[index].value
+                    data=all_data[categoryKey].cluster
+                    var html=''
+                    for(let i of data.KEY){
+                        html+="<option value='"+i+"'>"+i+"</option>"
+                    }
+                    document.getElementById('step_summarySelect').innerText=''
+                    $("#step_summarySelect").append(html)
+                    tsne_gene_data= all_data[categoryKey].gene
+                    tsne_gene_show()
+                    table_data_all=all_data[categoryKey].table_dict
+                    getSelectValue()
+                 }
+                 function getSelectValue(){
+                    var mySelect=document.getElementById("step_summarySelect");
+                    var index=mySelect.selectedIndex ;
+                    key=mySelect.options[index].value
+                    drawBar(key)
+                    table_data=JSON.parse(JSON.stringify(table_data_all.table[key]))
+                    table()
+                 }
+                 function PlotlyRender(id,title,plotly_data,x_name,y_name,color_bar_name){
+
+                    Plotly.newPlot(id, plotly_data,
+                              {
+                            "coloraxis": {
+                                "colorbar": {
+                                    "title": {
+                                        "text": color_bar_name
+                                    }
+                                },
+                                "colorscale": [
+                                    [
+                                        0.0,
+                                        "rgb(0,0,131)"
+                                    ],
+                                    [
+                                        0.2,
+                                        "rgb(0,60,170)"
+                                    ],
+                                    [
+                                        0.4,
+                                        "rgb(5,255,255)"
+                                    ],
+                                    [
+                                        0.6,
+                                        "rgb(255,255,0)"
+                                    ],
+                                    [
+                                        0.8,
+                                        "rgb(250,0,0)"
+                                    ],
+                                    [
+                                        1.0,
+                                        "rgb(128,0,0)"
+                                    ]
+                                ]
+                            },
+                            hovermode: "closest",
+                            legend: {
+                                itemsizing: "constant",
+                                title: {
+                                    text: color_bar_name
+                                },
+                                tracegroupgap: 0
+                            },
+                            "plot_bgcolor": "#FFFFFF",
+                             "template": {
+                                "data": {
+                                    "scattergl": [
+                                        {
+                                            "marker": {
+                                                "colorbar": {
+                                                    "outlinewidth": 0,
+                                                    "ticks": ""
+                                                }
+                                            },
+                                            "type": "scattergl"
+                                        }
+                                    ],
+                                },
+                                "layout": {
+                                    "annotationdefaults": {
+                                        "arrowcolor": "#2a3f5f",
+                                        "arrowhead": 0,
+                                        "arrowwidth": 1
+                                    },
+                                    "font": {
+                                        "color": "#2a3f5f"
+                                    },
+                                }
+                            },
+                            "title": {
+                                "font": {
+                                    "size": 15
+                                },
+                                "text": title,
+                                "x": 0.5,
+                                "y": 0.95
+                            },
+                            "xaxis": {
+                                "anchor": "y",
+                                "domain": [
+                                    0.0,
+                                    1.0
+                                ],
+                                "gridcolor": "#F5F5F5",
+                                "showgrid": true,
+                                "showline": false,
+                                "title": {
+                                    "text": x_name
+                                },
+                                "zeroline": true,
+                                "zerolinecolor": "black",
+                                "zerolinewidth": 0.7
+                            },
+                            "yaxis": {
+                                "anchor": "x",
+                                "domain": [
+                                    0.0,
+                                    1.0
+                                ],
+                                "gridcolor": "#F5F5F5",
+                                "showgrid": true,
+                                "showline": false,
+                                "title": {
+                                    "text": y_name
+                                },
+                                "zeroline": true,
+                                "zerolinecolor": "black",
+                                "zerolinewidth": 0.7
+                            }
+                        },{
+                            displayModeBar: true,
+                            staticPlot: false,
+                            showAxisDragHandles: false,
+                            modeBarButtons: [
+                                [
+                                    "toImage",
+                                    "resetScale2d"
+                                ]
+                            ],
+                            scrollZoom: false,
+                            displaylogo: false,
+                            responsive: true
+                       });
+                 }
+                function drawBar (key) {
+                  var color = data[key].data;
+                  let plotly_data=[]
+                  let customdata={}
+                  let x={}
+                  let y={}
+                  let size={}
+                  for(let i in data[key].data){
+                    if(customdata[data[key].data[i]]){
+                        customdata[data[key].data[i]].push([
+                            data[key].data[i],
+                            parseInt(i)+1,
+                            data.size[i]
+                       ])
+                    }else{
+                        customdata[data[key].data[i]]=[[
+                            data[key].data[i],
+                            parseInt(i)+1,
+                            data.size[i]
+                       ]]
+                    }
+                    if(x[data[key].data[i]]){
+                        x[data[key].data[i]].push(data.X[i])
+                    }else{
+                        x[data[key].data[i]]=[data.X[i]]
+                    }
+                    if(y[data[key].data[i]]){
+                        y[data[key].data[i]].push(data.Y[i])
+                    }else{
+                        y[data[key].data[i]]=[data.Y[i]]
+                    }
+                  }
+                  for(let s of data[key].category_orders){
+                      if(customdata[s]){
+                          plotly_data.push({
+                            customdata: customdata[s],
+                            //hoverinfo:"all",
+                            hovertemplate: "(%{x}，%{y})<br>Cluster ="+s+"<br>barcode_index=%{customdata[1]}<extra></extra>",
+                            legendgroup: s,
+                            marker: {
+                                opacity: 0.9,
+                                size: data.size,
+                                sizemode: "area",
+                                sizeref: 0.25,
+                                symbol: "circle",
+                            },
+                            hovermode:'closest',
+                            mode: "markers",
+                            name: s,
+                            showlegend: true,
+                            x: x[s],
+                            xaxis: "x",
+                            y: y[s],
+                            yaxis: "y",
+                            type: "scattergl"
+                          })
+                      }
+                  }
+                  PlotlyRender('t_SNE_c',categoryKey+' Projection of Cells by Clustering',plotly_data,categoryKey+'_1',categoryKey+'_2',key)
+                }
+                function pagesize(){
+                    page_size=$("#selectPage").val();
+                    table();
+                }
+                function sort_fun(i){
+                    if(!table_data.sort){
+                        table_data.sort=[]
+                        for(let s in table_data.columns){
+                            table_data.sort.push(false)
+                        }
+                    }
+                    table_data.data.sort(compare(i,table_data.sort[i]));
+                    table_data.sort[i]=table_data.sort[i]? false :true
+                    table();
+                }
+                function compare(i,order){
+                    return function(a,b){
+                        var value1=a[i]
+                        var value2=b[i]
+                        if(order){
+                            return value2-value1;
+                        }else{
+                            return value1-value2;
+                        }
+                    }
+                }
+                function recovery_fun(){
+                    table_data=table_data_all.table[key]
+                    table()
+                }
+                function table(type=null,num =null){
+                    last_page=Math.ceil(table_data.data.length/page_size)
+                    if(!type && !num){
+                        $("#inp").val(1);
+                        num=1
+                    }else if(type=='inp'){
+                        num=$("#inp").val();
+                        if(num>last_page){
+                            num=last_page
+                            $("#inp").val(num);
+                        }
+                    }else if(type=='last'){
+                        num=last_page
+                    }
+                    if(num){
+                        page_num = num;
+                    }else{
+                        page_num= (type=='next'?page_num+1:page_num-1)
+
+                        if(page_num==0){
+                            page_num=1
+                        }
+                        if(page_num>last_page){
+                            page_num=last_page
+                        }
+                    }
+                    $("#inp").val(page_num);
+                    document.getElementById('page_num').innerText=page_num
+                    document.getElementById('last_page').innerText=last_page
+                    let first_c_d={}
+                    for(let c_i in table_data.columns){
+                       if(first_c_d[table_data.columns[c_i][0]]){
+                          first_c_d[table_data.columns[c_i][0]]+=1
+                       }else{
+                           first_c_d[table_data.columns[c_i][0]]=1
+                       }
+                    }
+                    var html="<tr class='pages' style='background:  #f1f1f1; padding:10px 1px;'>"
+                    for(let s in first_c_d){
+                        html+="<th style='padding: 10px 1px;border: 1px solid #ddd' colspan='"+first_c_d[s]+"'>"+s+"</th>"
+                    }
+                    html+="</tr>";
+                    html+="<tr class='pages' style='background:  #f1f1f1; padding:10px 1px;'>"
+                    for(let i =0 ;i<table_data.columns.length;i++){
+                        html+="<th style='padding: 10px 1px;border: 1px solid #ddd' onclick='sort_fun("+i+")'>"+table_data.columns[i][1]+"</th>"
+                    }
+                    html+="</tr>";
+                    for (let i = (page_num-1)*page_size; i < (page_num)*page_size; i++) {
+                        if(i<table_data.data.length){
+                            html+=(i%2) ?"<tr style='background: #f1f1f1'>":"<tr >"
+                            for (let s =0 ;s<table_data.data[i].length; s++){
+                                let c_k=table_data.columns[s]
+                                html+="<td style='min-width:100px;border-bottom: 1px solid #fff'>"
+                                if(c_k[1]=='p-value'){
+                                    if(table_data.data[i][s]<0.05){
+                                        html+=`<span style='color: #8e8e8e;'>${table_data.data[i][s]+''}</span>`
+                                    }else{
+                                        html+=table_data.data[i][s]+''//.toExponential(2)
+                                    }
+
+                                }else if(c_k[1]=='L2FC' ){
+                                    if(table_data.data[i][s]<0){
+                                        html+=`<span style='color: #8e8e8e;'>${table_data.data[i][s].toFixed(2)}</span>`
+                                    }else{
+                                        html+=table_data.data[i][s].toFixed(2)
+                                    }
+                                }else{
+                                    html+=table_data.data[i][s]
+                                }
+                                html+="</td>"
+                                //.toExponential(2)
+                            }
+                            html+="</tr>"
+                        }
+                    }
+                    document.getElementById('table').innerText=''
+                    $("#table").append(html)
+
+                }
+            </script>
+
+        {# {% include "html/utils/table_dict.html" %} #}
+    <div class="clear" ></div>
+    </div>
+</div>

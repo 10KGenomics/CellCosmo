@@ -1,0 +1,2 @@
+graft cell_cosmo/output_runner/templates
+include *.txt cell_cosmo/*.cfg
