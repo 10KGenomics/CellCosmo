@@ -26,7 +26,7 @@ wget {todo after release the source code}
 pip install cell_cosmo-1.0.1.tar.gz
 
 # or you can build with source code
-git clone https://github.com/caijingtao1993/CellCOSMO_test.git
+git clone https://github.com/caijingtao1993/CellCOSMO.git
 python setup.py sdist
 pip install dist/cell_cosmo-*.tar.gz
 ```
