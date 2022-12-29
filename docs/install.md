@@ -22,7 +22,7 @@ mamba create -n $ENV_NAME -y --file dep_tools.txt
 ## Step 2: Installing CellCosmo software
 ```bash
 # Download the release package
-wget {todo after release the source code}
+wget [{todo after release the source code}](https://github.com/caijingtao1993/CellCOSMO/releases/download/v1.0.2/cell_cosmo-1.0.2.tar.gz)
 pip install cell_cosmo-1.0.1.tar.gz
 
 # or you can build with source code
