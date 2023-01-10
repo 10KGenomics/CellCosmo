@@ -1,3 +1,9 @@
+## Features
+- Trim adapters in R2 reads with cutadapt.
+
+## Output
+- cutadapt.log Cutadapt output log file.
+- `{sample}_clean_2.fq.gz` R2 reads file after trimming adapters.
 
 ## Arguments
 ```bash
