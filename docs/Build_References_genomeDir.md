@@ -1,7 +1,7 @@
 # Make a rna genomeDir
 
 - Construction of human reference genome
-Remarks：If there is gene_name in the gtf file, you can add the "--gene-name-as-name2" parameter in the "CellCosmo rna mkref" directive. If there is only "gene_id", you will not add the parameter.
+- Remarks：If there is gene_name in the gtf file, you can add the "--gene-name-as-name2" parameter in the "CellCosmo rna mkref" directive. If there is only "gene_id", you will not add the parameter.
 
 ```bash
 mkdir GRCh38_ensembl_index
