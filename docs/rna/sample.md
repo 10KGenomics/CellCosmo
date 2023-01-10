@@ -1,3 +1,5 @@
+## Features
+- Generate specific sample and software version information.
 
 ## Arguments
 ```bash
