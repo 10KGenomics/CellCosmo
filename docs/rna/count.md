@@ -1,3 +1,25 @@
+## Features
+- Cell-calling: Distinguish valid cell barcodes from background barcodes. 
+- Generate expression matrix.
+
+## Output
+- `{sample}_raw_feature_bc_matrix` The expression matrix of all detected barcodes in [Matrix Market Exchange Formats](https://math.nist.gov/MatrixMarket/formats.html).
+- `{sample}_filtered_feature_bc_matrix` The expression matrix of valid cell barcodes in Matrix Market Exchange Formats. 
+- `{sample}_count_detail.tsv` 4 columns: 
+    - barcode  
+    - gene ID
+    - UMI count  
+    - read_count  
+- `{sample}_counts.tsv` 6 columns:
+    - Barcode: barcode sequence
+    - readcount: read count of each barcode
+    - UMI2: read count with reads per UMI >= 2 for each barcode
+    - UMI: UMI count for each barcode
+    - geneID: gene count for each barcode
+    - mark: valid cell barcode or backgound barcode.
+        `CB` valid cell barcode
+        `UB` background barcode  
+- `{sample}_downsample.tsv` Subset a fraction of reads and calculate median gene number and sequencing saturation.
 
 ## Arguments
 ---
