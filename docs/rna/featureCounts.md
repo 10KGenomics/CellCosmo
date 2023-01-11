@@ -1,3 +1,13 @@
+## Features
+- Assigning uniquely mapped reads to genomic features, summarization that counts mapped reads for genomic features such as genes, exon and intron.
+
+## Output
+- `{sample}_Aligned.sortedByCoord.out.bam.featureCounts.bam` featureCounts output BAM.
+- `{sample}` Numbers of reads assigned to each feature.
+- `{sample}_summary` A summary, including number of successfully assigned reads and other reads that failed to be assigned due to various reasons.
+- `{sample}_name_sorted.bam` featureCounts output BAM, sorted by read name.
+
+## Arguments
 ```bash
 Usage: CellCosmo rna featureCounts [OPTIONS]
 
