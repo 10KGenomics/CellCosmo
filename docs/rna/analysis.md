@@ -1,3 +1,9 @@
+## Features
+- Cell clustering with Scanpy.
+- Calculate the marker gene of each cluster.
+
+## Output
+- `tsne_coord.tsv` t-SNE coordinates and clustering information.
 
 ## Arguments
 ---
