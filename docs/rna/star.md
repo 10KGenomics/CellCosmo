@@ -2,9 +2,11 @@
 - Alignment the sequencing R2 RNA reads to the reference genome with STAR software.
 
 ## Output
-- `{sample}_Aligned.sortedByCoord.out.bam` BAM file contains Uniquely Mapped Reads.
-- `{sample}_Log.Log.final.out` Summary mapping statistics after mapping job is complete, 
-very useful for quality control. The statistics are calculated for each read (single- or paired-end) and then summed or averaged over all reads.
+- `{sample}_Aligned.sortedByCoord.out.bam` The uniquely aligned reads, sorted by coordinate, in BAM format.
+- `{sample}_Log.final.out` A summary of mapping statistics for the sample.
+- `{sample}_Log.out` A running log from STAR, withinformation about the run.
+- `{sample}_Log.progress.out` Job progress with the number of processed reads, % of mapped reads etc., updated every ~1 minute.
+- `{sample}_SJ.out.tab` High confidence collapsed splice junctions in tab-delimited format. Only junctions supported by uniquely mapping reads are reported.
 
 ## Arguments
 ```bash
