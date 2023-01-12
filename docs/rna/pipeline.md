@@ -33,7 +33,7 @@ rna analysis pipeline
 - stat.txt
 - {SampleName}_summary.tsv
 
-Note: See the description of each module for the above output file notes
+Note: See the description of each module for the above output file notes.
 
 ## Arguments
 ```bash
