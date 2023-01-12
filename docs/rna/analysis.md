@@ -1,9 +1,11 @@
 ## Features
 - Cell clustering with Scanpy.
-- Calculate the marker gene of each cluster.
+- Calculate the marker genes of each cluster.
 
 ## Output
-- `tsne_coord.tsv` t-SNE coordinates and clustering information.
+- `{sample}_tsne_coord.tsv` t-SNE coordinates and clustering information.
+- `{sample}_umap_coord.tsv` UMAP  coordinates and clustering information.
+- `{sample}_analysis` The analysis partial results are saved in this folder, include PCA, t-SNE, UMAP, diffGene expression and clustering. 
 
 ## Arguments
 ---
