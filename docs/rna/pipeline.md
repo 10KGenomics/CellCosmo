@@ -1,8 +1,7 @@
 ## Features
-
 rna analysis pipeline
-## Output
 
+## Output
 - {SampleName}_1.fq.gz
 - {SampleName}_2.fq.gz
 - {SampleName}_clean_2.fq.gz
@@ -34,8 +33,9 @@ rna analysis pipeline
 - stat.txt
 - {SampleName}_summary.tsv
 
-## Arguments
+Note: See the description of each module for the above output file notes
 
+## Arguments
 ```bash
 Usage: CellCosmo rna pipeline [OPTIONS]
 
