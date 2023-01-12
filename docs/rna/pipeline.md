@@ -1,5 +1,5 @@
 ## Features
-rna analysis pipeline
+scRNA-seq analysis pipeline
 
 ## Output
 - {SampleName}_1.fq.gz
