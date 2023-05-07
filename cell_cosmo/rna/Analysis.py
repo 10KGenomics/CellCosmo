@@ -8,6 +8,8 @@
 @Desc       : None
 """
 import logging
+import os.path
+
 import pandas as pd
 from cell_cosmo.util import runtime
 # from sklearn.cluster import KMeans
@@ -90,6 +92,24 @@ class Analysis(ScanpyWrapper):
                 'table': marker_dict[name],
                 'id': f"{name}_marker_genes"}
             self.add_data(**{name: plot_dict})
+
+        # todo 流程的最后一步，添加清理大文件的逻辑
+        clean_type = os.getenv("CELLCOSMO_LARGE_FILE_CLEAN_STRATEGY", 1)
+        if str(clean_type) == '1':
+            need_clean_files = [
+                f"{self.out_prefix}_Aligned.sortedByCoord.out.bam.featureCounts.bam",
+                f"{self.out_prefix}_Aligned.sortedByCoord.out.bam",
+                f"{self.out_prefix}_Aligned.sortedByCoord.out.bam.bai",
+                f"{self.out_prefix}_Aligned.out.bam",
+                f"{self.out_prefix}_no_polyt1.fq.gz",
+                f"{self.out_prefix}_no_polyt2.fq.gz",
+                f"{self.out_prefix}_1.fq.gz",
+                f"{self.out_prefix}_2.fq.gz",
+                f"{self.outdir}/.temp.db",
+            ]
+            for ncf in need_clean_files:
+                if os.path.exists(ncf):
+                    os.remove(ncf)
 
     def add_marker_help(self):
         self.add_help_content(

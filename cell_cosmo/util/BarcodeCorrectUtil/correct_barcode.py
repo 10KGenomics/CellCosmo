@@ -68,6 +68,4 @@ def correct_barcode_and_umi(
                                  output=f"{out_prefix}_count_detail.tsv",
                                  percent=percent,
                                  thread=thread).correct()
-    # 处理完成后删除隐藏文件， 20230320
-    db_util.clean_db()
     return all_correct_df

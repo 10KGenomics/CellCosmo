@@ -7,6 +7,7 @@
 @Version    : 1.0
 @Desc       : None
 """
+import os
 import logging
 import itertools
 import pandas as pd
@@ -78,7 +79,11 @@ class CorrectUMIs:
         self.diff_num = 1
 
     def out(self, df: pd.DataFrame):
-        df.to_csv(self.output, sep="\t", index=False)
+        compression_type = os.getenv("CELLCOSMO_COMPRESSION_STRATEGY", 1)
+        output = self.output
+        if str(compression_type) == "1" and not output.endswith(".gz"):
+            output = f"{self.output}.gz"
+        df.to_csv(output, sep="\t", compression="gzip", index=False)
 
     def correct(self):
         data = []

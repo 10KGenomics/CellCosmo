@@ -73,6 +73,16 @@ def bam2count_table(bam, out_prefix) -> pd.DataFrame:
     # count 和 size 在这里结果相同,因为没有NA值
     df = df.groupby(cols)[DBUtil.umi].count().reset_index(name=DBUtil.count)
     # todo async output
-    df.to_csv(count_detail_raw_file, sep="\t", index=False)
+    # df.to_csv(count_detail_raw_file, sep="\t", index=False)
+    _out(count_detail_raw_file, df)
+
     assert df.shape[0] != 0, f"No data left!!"
     return df
+
+
+def _out(output, df: pd.DataFrame):
+    compression_type = os.getenv("CELLCOSMO_COMPRESSION_STRATEGY", 1)
+    output_ = output
+    if str(compression_type) == "1" and not output.endswith(".gz"):
+        output_ = f"{output}.gz"
+    df.to_csv(output_, sep="\t", compression="gzip", index=False)
