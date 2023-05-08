@@ -80,10 +80,10 @@ class CorrectUMIs:
 
     def out(self, df: pd.DataFrame):
         compression_type = os.getenv("CELLCOSMO_COMPRESSION_STRATEGY", 1)
-        output = self.output
-        if str(compression_type) == "1" and not output.endswith(".gz"):
-            output = f"{self.output}.gz"
-        df.to_csv(output, sep="\t", compression="gzip", index=False)
+        if str(compression_type) == "1":
+            df.to_csv(f"{self.output}.gz", sep="\t", compression="gzip", index=False)
+        else:
+            df.to_csv(self.output, sep="\t", index=False)
 
     def correct(self):
         data = []

@@ -82,7 +82,7 @@ def bam2count_table(bam, out_prefix) -> pd.DataFrame:
 
 def _out(output, df: pd.DataFrame):
     compression_type = os.getenv("CELLCOSMO_COMPRESSION_STRATEGY", 1)
-    output_ = output
     if str(compression_type) == "1" and not output.endswith(".gz"):
-        output_ = f"{output}.gz"
-    df.to_csv(output_, sep="\t", compression="gzip", index=False)
+        df.to_csv(f"{output}.gz", sep="\t", compression="gzip", index=False)
+    else:
+        df.to_csv(f"{output}.gz", sep="\t", index=False)
