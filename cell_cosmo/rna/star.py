@@ -21,9 +21,9 @@ class Star(BaseSTARRunner):
     _STEP_NAME = "star"
     _DISPLAY_TITLE = "Mapping"
 
-    def __init__(self, **kwargs):
+    def __init__(self, picard_mem, **kwargs):
         super(Star, self).__init__(**kwargs)
-
+        self.picard_mem = picard_mem
         # reset parent attr
         self.genome = GenomeUtil.parse_rna_dir(self.genomeDir)
         self.refflat = self.genome['refflat']
@@ -57,8 +57,8 @@ class Star(BaseSTARRunner):
     def picard(self):
         cmd = [
             'picard',
-            '-Xmx20G',
-            '-XX:ParallelGCThreads=4',
+            f'-Xmx{self.picard_mem}G',
+            f'-XX:ParallelGCThreads={str(self.thread)}',
             'CollectRnaSeqMetrics',
             'I=%s' % self.STAR_bam,
             'O=%s' % self.picard_region_log,

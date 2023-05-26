@@ -19,6 +19,7 @@ class MetaStar(CMDBase):
                 C("--out-unmapped", default="False", is_flag=True),
                 C("--out-filter-match-n-min", default="0"),
                 C("--out-filter-multimap-n-max", default="1"),
+                C("--picard-mem", default="30"),
                 C("--star-mem", default="30"),
                 C("--star-param"),
                 C("--thread", default="4"),

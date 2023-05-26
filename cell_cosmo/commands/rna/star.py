@@ -25,6 +25,8 @@ from cell_cosmo.rna.star import Star
               help="How many places are allowed to match a read at most.")
 @click.option('--star-mem', default=30,
               help="Maximum memory that STAR can use.")
+@click.option('--picard-mem', default=30,
+              help="Maximum memory that picard can use.")
 @click.option('--star-param', "STAR_param", default="",
               help='Additional parameters for the called software. Need to '
                    'be enclosed in quotation marks. For example: '
