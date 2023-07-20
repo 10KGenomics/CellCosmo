@@ -7,8 +7,8 @@
 @Version    : 1.0
 @Desc       : None
 """
+import os
 import sys
-
 from cell_cosmo.rna.barcode.valid import BaseOutput, ValidCfg, ValidPolyt, ValidLink, ValidBarcode, ValidQual
 from cell_cosmo.rna.barcode import parse_pattern as pp
 from collections import Counter
@@ -19,6 +19,34 @@ logger = logging.getLogger(__name__)
 
 class BarcodeSplitter(BaseOutput):
     __filename__ = ""
+
+    @classmethod
+    def read_library_by_name(cls, name):
+        # library 位置位于当前文件上两级后的 cc_data 下
+        _barcode = os.path.dirname(__file__)
+        _rna = os.path.dirname(_barcode)
+        _cell_cosmo = os.path.dirname(_rna)
+        chemistry_path = os.path.join(_cell_cosmo, "cc_data", "chemistry")
+        names = {n for n in os.listdir(chemistry_path) if
+                 os.path.isdir(os.path.join(chemistry_path, n))}
+        if name not in names:
+            name_str = "`, `".join(names)
+            raise Exception(f"不支持该名称的文库:`{name}`,当前仅支持:`{name_str}`"
+                            f",或者联系管理员增加该文库配置")
+        libname_path = os.path.join(chemistry_path, name)
+
+        # pattern
+        libname_dirs = []
+        for p in os.listdir(libname_path):
+            pattern_path = os.path.join(libname_path, p)
+            config_path = os.path.join(pattern_path, "chemistry.ini")
+            if os.path.isdir(pattern_path) and os.path.exists(config_path):
+                libname_dirs.append((p, config_path))
+        if len(libname_dirs) == 0:
+            raise Exception(f"没有识别名为`{name}`的文库，请检查文库是否满足要求")
+        if len(libname_dirs) != 1:
+            raise Exception(f"名为`{name}`的文库中包含多个文库配置目录,当前仅支持配置一个目录")
+        return libname_dirs[0]  # pattern_str, config_file
 
     def __init__(self, chemistry_name, chemistry_config, pattern, **kwargs):
         """
@@ -33,14 +61,18 @@ class BarcodeSplitter(BaseOutput):
             if chemistry_config is not None:
                 logger.warning("`--chemistry-config` param invalid when specify `--chemistry-name`")
             # TODO 待完成文库标准化再开发使用 library_name 参数
+            if chemistry_name == "default":
+                chemistry_name = "KitVersion1"  # 默认使用该版本的库
+            pattern_str, config_file = self.read_library_by_name(chemistry_name)
             self.library_name = chemistry_name
-            self.config_file = ""  # 从数据库中获取该信息,
+            self.config_file = config_file
+            self.pattern_str = pattern_str
             logger.info("chemistry database is developing,please wait!!")
             sys.exit(1)
         else:
             self.library_name = pattern
             self.config_file = chemistry_config
-        self.pattern_str = pattern
+            self.pattern_str = pattern
 
         # init
         self.qual_counter_barcode = Counter()

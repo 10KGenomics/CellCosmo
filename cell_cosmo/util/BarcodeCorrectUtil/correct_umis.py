@@ -2,8 +2,8 @@
 # -*- coding:utf-8 -*-
 """
 @Author     : ice-melt@outlook.com
-@File       : correct_umis.py
-@Time       : 2022/08/04
+@File       : correct_umis2.py
+@Time       : 2023/07/20
 @Version    : 1.0
 @Desc       : None
 """
@@ -15,7 +15,8 @@ from tqdm import tqdm
 from functools import partial
 from multiprocessing import Pool
 import time
-from cell_cosmo.util.BarcodeCorrectUtil.db_util import DBUtil
+from cell_cosmo.util.BarcodeCorrectUtil import ConstNS
+from cell_cosmo.util.BarcodeCorrectUtil.BaseOut import BaseOut
 from cell_cosmo.util import distance
 from collections import defaultdict
 from threading import Thread
@@ -69,21 +70,14 @@ def correct_umi(umi_dict, percent=0.1):
 
 
 class CorrectUMIs:
-    def __init__(self, db_util: DBUtil, df: pd.DataFrame, output: str, percent=0.1, thread=4):
+    def __init__(self, df: pd.DataFrame, out_util: BaseOut, percent=0.1, thread=4):
         """df: count_detail type data"""
-        self.tasks = df.groupby(DBUtil.barcode)
-        self.db_util = db_util
+        self.tasks = df.groupby(ConstNS.barcode)
+        # self.db_util = db_util
         self.percent = percent
         self.thread = thread
-        self.output = output
+        self.out_util = out_util
         self.diff_num = 1
-
-    def out(self, df: pd.DataFrame):
-        compression_type = os.getenv("CELLCOSMO_COMPRESSION_STRATEGY", 1)
-        if str(compression_type) == "1":
-            df.to_csv(f"{self.output}.gz", sep="\t", compression="gzip", index=False)
-        else:
-            df.to_csv(self.output, sep="\t", index=False)
 
     def correct(self):
         data = []
@@ -101,8 +95,8 @@ class CorrectUMIs:
                 for umi in gene_umi_dict[gene_id]:
                     count = gene_umi_dict[gene_id][umi]
                     data.append([barcode, gene_id, umi, count])
-        df = pd.DataFrame(data=data, columns=DBUtil.COUNT_DETAIL_COLS)
+        df = pd.DataFrame(data=data, columns=ConstNS.get_1_cols())
         # 使用异步线程避免输出文件阻塞
-        thr = Thread(target=self.out, args=(df,))
+        thr = Thread(target=self.out_util.to_csv, args=("count_detail", df,))
         thr.start()
         return df

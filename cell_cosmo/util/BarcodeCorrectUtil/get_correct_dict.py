@@ -3,18 +3,35 @@
 """
 @Author     : ice-melt@outlook.com
 @File       : get_correct_dict.py
-@Time       : 2022/07/13
+@Time       : 2023/07/19
 @Version    : 1.0
 @Desc       : None
 """
-# from cell_cosmo.util.BarcodeCorrectUtil import filter
-from cell_cosmo.util.BarcodeCorrectUtil.db_util import DBUtil
+import abc
 import logging
 import pandas as pd
 from tqdm import tqdm
-import abc
+from cell_cosmo.util.BarcodeCorrectUtil import ConstNS
+from cell_cosmo.util.BarcodeCorrectUtil.BaseOut import BaseOut
+
+# from cell_cosmo.util.BarcodeCorrectUtil import filter
+# from cell_cosmo.util.BarcodeCorrectUtil.db_util import DBUtil
 
 logger = logging.getLogger(__name__)
+
+intended_base = ConstNS.intended_base
+neighbor_base = ConstNS.neighbor_base
+intended_size = ConstNS.intended_size
+neighbor_size = ConstNS.neighbor_size
+intended_barcode = ConstNS.intended_barcode
+neighbor_barcode = ConstNS.neighbor_barcode
+filter_reason = ConstNS.filter_reason
+position = ConstNS.position
+
+percent = ConstNS.percent
+neighbors = ConstNS.neighbors
+n_neighbors = ConstNS.n_neighbors
+neighbor_size_total = ConstNS.neighbor_size_total
 
 
 class FilterBase(metaclass=abc.ABCMeta):
@@ -43,8 +60,8 @@ class FilterItdSizeLeNbrSize(FilterBase):
         self.reason_str = 'filter_by_step1: itd size <= nbr size'
 
     def _run(self, df):
-        data_slice = df[DBUtil.intended_size] <= df[DBUtil.neighbor_size]
-        df.loc[data_slice, DBUtil.filter_reason] = self.reason_str
+        data_slice = df[intended_size] <= df[neighbor_size]
+        df.loc[data_slice, filter_reason] = self.reason_str
 
 
 class FilterDuplicateSameBaseInItd(FilterBase):
@@ -55,12 +72,12 @@ class FilterDuplicateSameBaseInItd(FilterBase):
 
     def _run(self, df):
         df[self.rank] = 10000  # 随便给一个较大的初始值
-        data_slice = (df[DBUtil.neighbor_base] == '-') & (df[DBUtil.filter_reason] == "")
+        data_slice = (df[neighbor_base] == '-') & (df[filter_reason] == "")
         df.loc[data_slice, self.rank] = df[data_slice].groupby(
-            [DBUtil.intended_barcode, DBUtil.neighbor_barcode]
-        )[DBUtil.position].rank(method='first')
-        update_slice = (df[DBUtil.filter_reason] == "") & (df[self.rank] != 1)
-        df.loc[update_slice, DBUtil.filter_reason] = self.reason_str
+            [intended_barcode, neighbor_barcode]
+        )[position].rank(method='first')
+        update_slice = (df[filter_reason] == "") & (df[self.rank] != 1)
+        df.loc[update_slice, filter_reason] = self.reason_str
 
 
 class FilterDuplicateBySubstitutionWithIdl(FilterBase):
@@ -71,12 +88,12 @@ class FilterDuplicateBySubstitutionWithIdl(FilterBase):
 
     def _run(self, df):
         df[self.rank] = 10000  # 重新使用rank列按新的条件排序
-        data_slice = df[DBUtil.filter_reason] == ""
+        data_slice = df[filter_reason] == ""
         df.loc[data_slice, self.rank] = df[data_slice].groupby(
-            [DBUtil.neighbor_barcode, DBUtil.intended_barcode]
-        )[DBUtil.neighbor_base].rank(method='first')
-        update_slice = (df[DBUtil.filter_reason] == "") & (df[self.rank] != 1)
-        df.loc[update_slice, DBUtil.filter_reason] = self.reason_str
+            [neighbor_barcode, intended_barcode]
+        )[neighbor_base].rank(method='first')
+        update_slice = (df[filter_reason] == "") & (df[self.rank] != 1)
+        df.loc[update_slice, filter_reason] = self.reason_str
 
 
 # filter itd with mult nbr
@@ -88,12 +105,12 @@ class FilterItdWithMultNbr(FilterBase):
 
     def _run(self, df):
         df[self.rank] = 10000  # 重新使用rank列按新的条件排序
-        data_slice = df[DBUtil.filter_reason] == ""
+        data_slice = df[filter_reason] == ""
         df.loc[data_slice, self.rank] = df[data_slice].groupby(
-            [DBUtil.neighbor_barcode]
-        )[DBUtil.intended_size].rank(method='max', ascending=True)
-        update_slice = (df[DBUtil.filter_reason] == "") & (df[self.rank] != 1)
-        df.loc[update_slice, DBUtil.filter_reason] = self.reason_str
+            [neighbor_barcode]
+        )[intended_size].rank(method='max', ascending=True)
+        update_slice = (df[filter_reason] == "") & (df[self.rank] != 1)
+        df.loc[update_slice, filter_reason] = self.reason_str
 
 
 class FilterItdInNbr(FilterBase):
@@ -103,9 +120,9 @@ class FilterItdInNbr(FilterBase):
         self.reason_str = 'filter_by_step5: itd in nbr'
 
     def _run(self, df):
-        update_slice = (df[DBUtil.filter_reason] == "") & (
-            df[DBUtil.intended_barcode].isin(df[DBUtil.neighbor_barcode]))
-        df.loc[update_slice, DBUtil.filter_reason] = self.reason_str
+        update_slice = (df[filter_reason] == "") & (
+            df[intended_barcode].isin(df[neighbor_barcode]))
+        df.loc[update_slice, filter_reason] = self.reason_str
 
 
 class AggItdAllNbr(FilterBase):
@@ -116,18 +133,18 @@ class AggItdAllNbr(FilterBase):
 
     def _run(self, df):
         # 将满足条件的itd-nbr pair按itd分组聚合
-        data_slice = df[DBUtil.filter_reason] == ""
+        data_slice = df[filter_reason] == ""
         sub_df = df[data_slice]
         data = []
-        for (itd_b, itd_s), ddf in sub_df.groupby([DBUtil.intended_barcode, DBUtil.intended_size]):
+        for (itd_b, itd_s), ddf in sub_df.groupby([intended_barcode, intended_size]):
             meta = []
             nbr_size = 0
             nbr_n = 0
-            for d in ddf[[DBUtil.intended_barcode,  # 0
-                          DBUtil.neighbor_size,  # 1
-                          DBUtil.intended_base,  # 2
-                          DBUtil.neighbor_base,  # 3
-                          DBUtil.position  # 4
+            for d in ddf[[intended_barcode,  # 0
+                          neighbor_size,  # 1
+                          intended_base,  # 2
+                          neighbor_base,  # 3
+                          position  # 4
                           ]].values.tolist():
                 nbr_size += d[1]
                 nbr_n += 1
@@ -137,17 +154,17 @@ class AggItdAllNbr(FilterBase):
 
         grouped_df = pd.DataFrame(data=data,
                                   columns=[
-                                      DBUtil.intended_barcode,
-                                      DBUtil.intended_size,
-                                      DBUtil.neighbors,
-                                      DBUtil.n_neighbors,
-                                      DBUtil.neighbor_size_total,
-                                      DBUtil.percent,
+                                      intended_barcode,
+                                      intended_size,
+                                      neighbors,
+                                      n_neighbors,
+                                      neighbor_size_total,
+                                      percent,
                                   ])
         return grouped_df
 
     def get_filter_slice(self, grouped_df: pd.DataFrame, limit):
-        le_percent_slice = grouped_df.loc[grouped_df[DBUtil.percent] > limit, DBUtil.intended_barcode]
+        le_percent_slice = grouped_df.loc[grouped_df[percent] > limit, intended_barcode]
         return le_percent_slice
 
 
@@ -161,8 +178,8 @@ class FilterBarcodeNbrUMIsLtLimit(FilterBase):
 
     def _run(self, df):
         # less than percent，这些数据是需要校正的
-        data_slice = (df[DBUtil.filter_reason] == "") & (df[DBUtil.intended_barcode].isin(self.data_slice))
-        df.loc[data_slice, DBUtil.filter_reason] = self.reason_str
+        data_slice = (df[filter_reason] == "") & (df[intended_barcode].isin(self.data_slice))
+        df.loc[data_slice, filter_reason] = self.reason_str
 
 
 class NeedCorrectBarcode(FilterBase):
@@ -174,30 +191,29 @@ class NeedCorrectBarcode(FilterBase):
         self.filter_limit = limit
 
     def _run(self, df):
-        data_slice = df[DBUtil.filter_reason] == ""
+        data_slice = df[filter_reason] == ""
         itd_nbr_df = df[data_slice].copy()
-        df.loc[data_slice, DBUtil.filter_reason] = "Passed:NeedCorrectBarcode"
+        df.loc[data_slice, filter_reason] = "Passed:NeedCorrectBarcode"
 
         # 去除一些不需要的列
         remove_cols = list(set(itd_nbr_df.columns.tolist()) &
-                           {"id", DBUtil.filter_reason, self.rank})
+                           {"id", filter_reason, self.rank})
 
         itd_nbr_df.drop(remove_cols, axis=1, inplace=True)
         return itd_nbr_df
 
 
-def get_correct_dict(db_util: DBUtil, filter_limit=0.01) -> dict:
+def get_correct_dict(df, out_util: BaseOut, filter_limit=0.01) -> dict:
     """
 
-    :param db_util: 当前运行时需要的校正数据所在的数据库
+    :param df: 输入数据
+    :param out_util: 输出帮助类
     :param filter_limit: nbr/itd > filter_limit will be filtered
     :return:
     """
 
-    df = DBUtil.ItdNbr.db2df(db_util)
-
     rank = "rank"
-    df[DBUtil.filter_reason] = ""
+    df[filter_reason] = ""
     df[rank] = 100000
 
     pbar = tqdm(total=8)
@@ -211,7 +227,8 @@ def get_correct_dict(db_util: DBUtil, filter_limit=0.01) -> dict:
 
     agg_itd_all_nbr = AggItdAllNbr(pbar)
     grouped_df = agg_itd_all_nbr.run(df)
-    DBUtil.ItdNbrGroup.df2db(db_util, grouped_df)
+    # todo grouped_df 记录到数据表
+    # DBUtil.ItdNbrGroup.df2db(db_util, grouped_df)
     le_percent_slice = agg_itd_all_nbr.get_filter_slice(grouped_df, filter_limit)
 
     FilterBarcodeNbrUMIsLtLimit(pbar, le_percent_slice).run(df)
@@ -220,11 +237,17 @@ def get_correct_dict(db_util: DBUtil, filter_limit=0.01) -> dict:
     # 去除一些不需要的列
     remove_cols = list(set(df.columns.tolist()) & {"id", rank})
     df.drop(remove_cols, axis=1, inplace=True)
-    DBUtil.ItdNbrReason.df2db(db_util, df)
-    # barcode 结果保存到文件
-    db_util.to_csv("barcode_itd_nbr_pairs.raw.tsv", df)
-    db_util.to_csv("barcode_itd_nbr_pairs.tsv", need_correct_barcode)
-    correct_dict = dict(need_correct_barcode[[DBUtil.neighbor_barcode, DBUtil.intended_barcode]].values.tolist())
+    # df 添加原因后记录到文件
+    out_util.to_csv("barcode_itd_nbr_pairs.raw", df)
+    out_util.to_csv("barcode_itd_nbr_pairs", need_correct_barcode)
+    correct_dict = dict(need_correct_barcode[[neighbor_barcode, intended_barcode]].values.tolist())
 
     pbar.close()
     return correct_dict
+
+
+if __name__ == '__main__':
+    _out = "/mnt/data/cellcosmo/xxx"
+    _df = pd.read_csv(f"{_out}/.s1_barcode_itd_nbr.tsv", sep='\t')
+
+    get_correct_dict(_df, BaseOut(_out, "s1"))

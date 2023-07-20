@@ -68,9 +68,13 @@ class BaseSTARRunner(BaseReportRunner):
         if self.out_unmapped:
             cmd += ['--outReadsUnmapped', 'Fastx']
         if self.fq[-3:] == ".gz":
+            # 苹果电脑 zcat 异常
             cmd += ['--readFilesCommand', 'zcat']
         cmd = ' '.join(cmd)
         if self.STAR_param:
+            # STAR_param 异常添加双引号或单引号的处理
+            self.STAR_param = str(self.STAR_param).lstrip(
+                "'").lstrip('"').rstrip("'").rstrip('"')
             cmd += (" " + self.STAR_param)
         logger.info(cmd)
         subprocess.check_call(cmd, shell=True)

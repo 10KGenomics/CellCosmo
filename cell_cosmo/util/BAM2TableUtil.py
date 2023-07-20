@@ -15,7 +15,7 @@ import pysam
 import pandas as pd
 from itertools import groupby
 from contextlib import contextmanager
-from cell_cosmo.util.BarcodeCorrectUtil.db_util import DBUtil
+from cell_cosmo.util.BarcodeCorrectUtil import ConstNS
 from cell_cosmo.util import runtime
 from tqdm import tqdm
 
@@ -68,10 +68,10 @@ def bam2count_table(bam, out_prefix) -> pd.DataFrame:
             gene_id = seg.get_tag('XT')
             data.append([barcode, gene_id, umi])
 
-    cols = [DBUtil.barcode, DBUtil.gene_id, DBUtil.umi]
+    cols = ConstNS.get_0_cols()
     df = pd.DataFrame(data=data, columns=cols)
     # count 和 size 在这里结果相同,因为没有NA值
-    df = df.groupby(cols)[DBUtil.umi].count().reset_index(name=DBUtil.count)
+    df = df.groupby(cols)[ConstNS.umi].count().reset_index(name=ConstNS.count)
     # todo async output
     # df.to_csv(count_detail_raw_file, sep="\t", index=False)
     _out(count_detail_raw_file, df)
