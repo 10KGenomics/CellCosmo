@@ -67,8 +67,8 @@ class BarcodeSplitter(BaseOutput):
             self.library_name = chemistry_name
             self.config_file = config_file
             self.pattern_str = pattern_str
-            logger.info("chemistry database is developing,please wait!!")
-            sys.exit(1)
+            # logger.info("chemistry database is developing,please wait!!")
+            # sys.exit(1)
         else:
             self.library_name = pattern
             self.config_file = chemistry_config
