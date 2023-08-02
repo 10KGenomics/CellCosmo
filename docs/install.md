@@ -3,7 +3,7 @@
 ## Step 1: Create a conda environment, Install dependent third-party software
 
 ```bash
-wget https://github.com/caijingtao1993/CellCOSMO_test/edit/main/dep_tools.txt
+wget https://github.com/10KGenomics/CellCOSMO/blob/main/dep_tools.txt
 # dep_tools.txt file
 conda-forge::python=3.10
 bioconda::star=2.7.10b              # STAR
@@ -27,7 +27,7 @@ wget https://github.com/10KGenomics/CellCOSMO/releases/download/v1.0.7/cell_cosm
 pip install cell_cosmo-1.0.7.tar.gz
 
 # or you can build with source code
-git clone https://github.com/caijingtao1993/CellCOSMO.git
+git clone https://github.com/10KGenomics/CellCOSMO.git
 python setup.py sdist
 pip install dist/cell_cosmo-*.tar.gz
 ```
