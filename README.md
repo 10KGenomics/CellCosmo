@@ -24,7 +24,7 @@ CellCosmo rna pipeline -g
 configuration documentation[`rna_pipeline.cfg`](docs/rna/rna_pipeline.cfg)
 ## 3.Run pipeline
 ```bash
-CellCosmo rna -c rna_pipeline.cfg
+CellCosmo rna pipeline -c rna_pipeline.cfg
 ```
 
 ## 4.Detailed docs can be found in manual
