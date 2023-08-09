@@ -23,7 +23,7 @@ class ValidPolyt(BaseValid):
         )
         if self.need_valid:
             assert pp.T in pattern.pattern_dict, f"check polyt but code {pp.T} not in pattern"
-            self.rate = kwargs.pop("polyt_mismatch_rate_allow", 0.7)
+            self.rate = kwargs.pop("polyt_rate", 0.7)
             self.n_allow = int(pattern.get_pattern_len(pp.T) * self.rate)
 
     def _valid(self, r1, r2) -> bool:

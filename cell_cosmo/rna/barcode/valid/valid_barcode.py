@@ -21,7 +21,7 @@ class ValidBarcode(BaseValid, CfgFilesMixin):
             pattern=pattern,
             need_valid=kwargs.pop("use_barcode_valid_reads", False),
             need_output=kwargs.pop("output_error_barcode", True),  # TODO false mark
-            n_allow=kwargs.pop("barcode_mismatch_num_allow", 1),
+            n_allow=kwargs.pop("allow_barcode_diff_num", 1),
             **kwargs
         )
         self._files = None

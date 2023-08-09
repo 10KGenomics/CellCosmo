@@ -21,7 +21,7 @@ class ValidLink(BaseValid, CfgFilesMixin):
             pattern=pattern,
             need_valid=kwargs.pop("use_link_valid_reads", False),
             need_output=kwargs.pop("output_no_linker", True),  # TODO false mark
-            n_allow=kwargs.pop("link_mismatch_num_allow", 2),
+            n_allow=kwargs.pop("allow_link_diff_num", 2),
             **kwargs
         )
         if self.need_valid:
