@@ -21,7 +21,7 @@ Run the following command to get the cfg file:
 ```bash
 CellCosmo rna pipeline -g
 ```
-* detailed configuration documentation[`rna_pipeline.cfg`](docs/rna/rna_pipeline.cfg)
+* Detailed configuration documentation[`rna_pipeline.cfg`](docs/rna/rna_pipeline.cfg)
 * If already established References  genomeDir and Kit version1 default, You can apply the simplified version of configuration documentation[`rna_pipeline_sv.cfg`](docs/rna/rna_pipeline_sv.cfg)
 ## 3.Run pipeline
 ```bash
