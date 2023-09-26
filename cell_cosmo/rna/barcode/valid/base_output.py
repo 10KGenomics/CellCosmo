@@ -45,9 +45,11 @@ class BaseOutput:
             if fh is not None:
                 fh.close()
 
-    def _write(self, r1, r2, is_out=False):
+    def _write(self, r1, r2, not_valid):
         # 只允许子类调用
-        self.num += 1  # 不管输出还是不输出num统计量都加1
-        if is_out:
+        if self.need_valid and not_valid:
+            # 需要校验且无效，统计值+1,并输出
+            # TODO need_output 目前还没使用
+            self.num += 1
             self.fh1.write("\n".join(r1) + "\n")
             self.fh2.write("\n".join(r2) + "\n")

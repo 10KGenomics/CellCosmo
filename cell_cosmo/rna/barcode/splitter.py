@@ -144,16 +144,17 @@ class BarcodeSplitter(BaseOutput):
             new_r1 = (new_header, r1[1], r1[2], r1[3])
             new_r2 = (new_header, r2[1], r2[2], r2[3])
             self._write(new_r1, new_r2, True)
-            return True
+        not_valid_flag = False
         for v in self.valid_chain:
             if not v.valid(r1, r2):
-                return False
-        new_header = self.get_new_header(r1)
-        self.set_read_qual(r2)
-        new_r1 = (new_header, r1[1], r1[2], r1[3])
-        new_r2 = (new_header, r2[1], r2[2], r2[3])
-        self._write(new_r1, new_r2, True)
-        return True
+                # FixBug: 避免直接返回后导致其他校验没有处理从而记数异常
+                not_valid_flag = True
+        if not not_valid_flag:
+            new_header = self.get_new_header(r1)
+            self.set_read_qual(r2)
+            new_r1 = (new_header, r1[1], r1[2], r1[3])
+            new_r2 = (new_header, r2[1], r2[2], r2[3])
+            self._write(new_r1, new_r2, True)
 
     def close_all(self):
         for v in self.valid_chain:

@@ -38,8 +38,8 @@ class BarcodeSplitterRunner(BaseReportRunner):
 
     def _run(self, fq1, fq2):
         for e1, e2 in zip(reader(fq1), reader(fq2)):
-            # header1, seq1, _, qual1 = e1
-            # header2, seq2, _, qual2 = e2
+            # header1, seq1, _, qual = e1
+            # header2, seq2, _, qual = e2
             self.barcode_splitter.process_reads_pair(e1, e2)
 
     @runtime(__name__)
@@ -56,10 +56,22 @@ class BarcodeSplitterRunner(BaseReportRunner):
         clean_num = bs.num
         logger.info(f"processed reads: {fmt_number(num_total)}. "
                     f"valid reads: {fmt_number(bs.num)}.")
-        logger.info(f"no polyT reads number : {bs.checker4polyt.num}")
-        logger.info(f"no_linker : {bs.checker4link.num}")
-        logger.info(f"no_barcode : {bs.checker4barcode.num}")
-        logger.info(f"low qual reads number: {bs.checker4qual.num}")
+        if bs.checker4polyt.need_valid:
+            logger.info(f"no polyT reads number : {bs.checker4polyt.num}")
+        else:
+            logger.info(f"not valid polyT。")
+        if bs.checker4link.need_valid:
+            logger.info(f"no_linker : {bs.checker4link.num}")
+        else:
+            logger.info(f"not valid linker。")
+        if bs.checker4barcode.need_valid:
+            logger.info(f"no_barcode : {bs.checker4barcode.num}")
+        else:
+            logger.info(f"not valid barcode。")
+        if bs.checker4qual.need_valid:
+            logger.info(f"low qual reads number: {bs.checker4qual.num}")
+        else:
+            logger.info(f"not valid qual。")
         if clean_num == 0:
             # TODO ensure param name `chemistry`?
             raise Exception(
@@ -117,4 +129,3 @@ class BarcodeSplitterRunner(BaseReportRunner):
             display=ReadQ30_display,
             help_info='Fraction of RNA read bases with quality scores over Q30',
         )
-

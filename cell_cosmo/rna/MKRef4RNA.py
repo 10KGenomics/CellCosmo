@@ -49,7 +49,7 @@ class MKRef4RNA(MKRefBase):
     def build_refflat(self):
         gene_name_alias = "-geneNameAsName2" if self.use_gene_name_as_name2 else ""
         cmd = (
-            f'gtfToGenePred -genePredExt {gene_name_alias} \\\n'
+            f'gtfToGenePred -genePredExt {gene_name_alias} -allErrors \\\n'
             f'{self.get("gtf")} /dev/stdout | \\\n'
             'awk \'{print $12"\\t"$1"\\t"$2"\\t"$3"\\t"$4"\\t"$5"\\t"$6"\\t"$7"\\t"$8"\\t"$9"\\t"$10}\' \\\n'
             f'> {self.get("refflat")} \\\n'
