@@ -24,6 +24,10 @@ If not provided, will use `MT-` and `mt-` to determine mitochondria genes.""")
               default=14, help="STAR param: genomeSAindexNbases.")
 @click.option('--gene-name-as-name2', is_flag=True, default=False,
               help="control the param of `-geneNameAsName2` in gtfToGenePred")
+@click.option('--star-param', "STAR_param", default="",
+              help='Additional parameters for the called software. Need to '
+                   'be enclosed in quotation marks. For example: '
+                   '`--{software}_param "--param1 value1 --param2 value2"`.')
 @common.thread6
 # @common.dry_run
 def mkref(**kwargs):

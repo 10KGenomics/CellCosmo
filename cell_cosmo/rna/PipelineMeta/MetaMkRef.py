@@ -22,6 +22,7 @@ class MetaMkRef(CMDBase):
                 C("--thread", default="6"),
                 C("--genomeSAindexNbases", default="14"),
                 C("--gene-name-as-name2", default="False", is_flag=True),
+                C("--star-param"),
             ],
             cmd=f"CellCosmo rna mkref".split()
         )

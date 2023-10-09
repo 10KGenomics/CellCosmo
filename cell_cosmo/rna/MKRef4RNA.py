@@ -23,6 +23,7 @@ class MKRef4RNA(MKRefBase):
     def __init__(self, **kwargs):
         kwargs.update({'refflat': f'{kwargs.get("genome_name")}.refFlat'})
         self.use_gene_name_as_name2 = kwargs.get("gene_name_as_name2", False)
+        self.STAR_param = kwargs.get("STAR_param", False)
         super(MKRef4RNA, self).__init__(**kwargs)
 
     @runtime(__name__)
@@ -42,6 +43,11 @@ class MKRef4RNA(MKRefBase):
             f'--sjdbGTFfile {self.get("gtf")} \\\n'
             f'--sjdbOverhang 100 \\\n'
         )
+        if self.STAR_param:
+            # STAR_param 异常添加双引号或单引号的处理
+            self.STAR_param = str(self.STAR_param).strip().lstrip(
+                "'").lstrip('"').rstrip("'").rstrip('"')
+            cmd += (" " + self.STAR_param)
         logger.info(cmd)
         subprocess.check_call(cmd, shell=True)
 

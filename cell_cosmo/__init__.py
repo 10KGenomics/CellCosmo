@@ -9,7 +9,7 @@
 """
 import os
 
-__VERSION__ = "1.0.10"
+__VERSION__ = "1.0.11"
 __version__ = __VERSION__
 
 ROOT_PATH = os.path.dirname(__file__)
