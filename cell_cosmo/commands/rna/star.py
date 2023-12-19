@@ -31,6 +31,9 @@ from cell_cosmo.rna.star import Star
               help='Additional parameters for the called software. Need to '
                    'be enclosed in quotation marks. For example: '
                    '`--{software}_param "--param1 value1 --param2 value2"`.')
+@click.option('--samtools-index-param', "samtools_index_param", default="",
+              help='Additional parameters for `samtools index` command. '
+                   'For example: `-c -m 4`.')
 @common.outdir
 @common.sample
 @common.thread4

@@ -23,7 +23,9 @@ def sort_bam(input_bam, output_bam, threads=1):
     subprocess.check_call(cmd, shell=True)
 
 
-def index_bam(input_bam):
-    cmd = f"samtools index {input_bam}"
+def index_bam(input_bam, samtools_index_param=None):
+    if samtools_index_param is None:
+        samtools_index_param = ""  # -c -m 4
+    cmd = f"samtools index {samtools_index_param} {input_bam}"
     logger.info(cmd)
     subprocess.check_call(cmd, shell=True)

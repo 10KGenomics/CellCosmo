@@ -22,6 +22,7 @@ class MetaStar(CMDBase):
                 C("--picard-mem", default="30"),
                 C("--star-mem", default="30"),
                 C("--star-param"),
+                C("--samtools-index-param"),
                 C("--thread", default="4"),
             ],
             cmd=f"CellCosmo rna star "

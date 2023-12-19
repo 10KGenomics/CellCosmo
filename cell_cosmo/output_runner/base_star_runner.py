@@ -7,13 +7,13 @@
 @Version    : 1.0
 @Desc       : None
 """
+import re
+import logging
+import subprocess
 from cell_cosmo.util import runtime
 from cell_cosmo.tools import utils
-import re
 from cell_cosmo.util import GenomeUtil
 from cell_cosmo.output_runner import BaseReportRunner
-import subprocess
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class BaseSTARRunner(BaseReportRunner):
 
     def __init__(self, genomeDir, fq, out_unmapped,
                  outFilterMultimapNmax, outFilterMatchNmin, consensus_fq,
-                 STAR_param, add_prefix=None, **kwargs):
+                 STAR_param, samtools_index_param=None, add_prefix=None, **kwargs):
         super(BaseSTARRunner, self).__init__(**kwargs)
 
         self.fq = fq
@@ -37,6 +37,7 @@ class BaseSTARRunner(BaseReportRunner):
         self.outFilterMatchNmin = int(outFilterMatchNmin)
         self.multi_max = int(outFilterMultimapNmax)
         self.STAR_param = STAR_param
+        self.samtools_index_param = samtools_index_param
         self.consensus_fq = consensus_fq
 
         # parse
@@ -96,7 +97,7 @@ class BaseSTARRunner(BaseReportRunner):
 
     @runtime(f'{__name__}.index_bam')
     def index_bam(self):
-        utils.index_bam(self.STAR_bam)
+        utils.index_bam(self.STAR_bam, self.samtools_index_param)
 
     def collect_matrix(self):
         """collect matrix"""
