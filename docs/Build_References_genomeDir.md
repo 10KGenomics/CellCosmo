@@ -11,7 +11,7 @@ tar -xzvf refdata-gex-mm10-2020-A.tar.gz
 
 CellCosmo rna mkref --gtf refdata-gex-GRCh38-2020-A/genes/genes.gtf \
 --genome-name GRCh38 \
---fasta refdata-gex-GRCh38-2020-A/genome.fa \
+--fasta refdata-gex-GRCh38-2020-A/fasta/genome.fa \
 ```
 - Construction of human reference genome from ensembl
 - Remarks：If there is gene_name in the gtf file, you can add the "--gene-name-as-name2" parameter in the "CellCosmo rna mkref" directive. If there is only "gene_id", you will not add the parameter.
@@ -42,7 +42,7 @@ tar -xzvf refdata-gex-mm10-2020-A.tar.gz
 
 CellCosmo rna mkref --gtf refdata-gex-mm10-2020-A/genes/genes.gtf \
 --genome-name GRCm38 \
---fasta refdata-gex-mm10-2020-A/genome.fa \
+--fasta refdata-gex-mm10-2020-A/fasta/genome.fa \
 ```
 - Construction of mouse reference genome from ensembl
 
