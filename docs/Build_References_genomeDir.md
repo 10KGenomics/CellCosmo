@@ -1,4 +1,4 @@
-# Make a rna genomeDir
+# Make an rna genomeDir
 
 - Construction of human reference genome using 10x reference(recommended)
 
