@@ -7,7 +7,7 @@ mkdir GRCh38_index
 cd GRCh38_index
 
 wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCh38-2020-A.tar.gz
-tar -xzvf refdata-gex-mm10-2020-A.tar.gz
+tar -xzvf refdata-gex-GRCh38-2020-A.tar.gz
 
 CellCosmo rna mkref --gtf refdata-gex-GRCh38-2020-A/genes/genes.gtf \
 --genome-name GRCh38 \
