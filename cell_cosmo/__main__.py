@@ -22,6 +22,7 @@ def print_version(ctx, param, value):
 
 def init_logger():
     fmt_str = '%(asctime)s,%(msecs)03d %(levelname)s %(name)s >> %(message)s'
+    # fmt_str = '%(asctime)s,%(msecs)03d [%(process)d]%(filename)s %(levelname)s  >> %(message)s'
     fmt = logging.Formatter(fmt=fmt_str, datefmt='%Y-%m-%dT%H:%M:%S')
     # 2022-06-01T15:20:03,846 [INFO] E:\workspace\genostack\cell_cosmo\cell_cosmo\util\runtime.py.__main__ start...
     logger = logging.getLogger(PACKAGE_NAME)

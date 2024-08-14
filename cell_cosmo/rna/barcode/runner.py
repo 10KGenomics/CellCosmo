@@ -7,10 +7,17 @@
 @Version    : 1.0
 @Desc       : None
 """
-from cell_cosmo.output_runner import BaseReportRunner
-from cell_cosmo.rna.barcode.splitter import BarcodeSplitter
-from cell_cosmo.util import runtime, fmt_number, reader
+import os
 import logging
+from multiprocessing import Pool, Manager
+from cell_cosmo.output_runner import BaseReportRunner
+from cell_cosmo.util import runtime, fmt_number, get_threads
+from cell_cosmo.tools.chemistry import LibraryInfo
+from .stat_info import StatInfo
+from .validators import Validators
+from .reads_processor import reads_processor
+from .yield_batch_data import yield_batch_data
+from functools import partial
 
 logger = logging.getLogger(__name__)
 
@@ -21,55 +28,76 @@ class BarcodeSplitterRunner(BaseReportRunner):
 
     def __init__(self, fq1, fq2, pattern=None, chemistry_config=None, chemistry_name=None, **kwargs):
         super(BarcodeSplitterRunner, self).__init__(**kwargs)
-        if all(x is None for x in [pattern, chemistry_config, chemistry_name]):
-            raise Exception("Please specify parameter chemistry_name, "
-                            "or specify parameters pattern and chemistry_config path")
 
-        self.barcode_splitter = BarcodeSplitter(
-            chemistry_name=chemistry_name,
-            chemistry_config=chemistry_config,
-            pattern=pattern, **kwargs)
+        self.fq1 = fq1
+        self.fq2 = fq2
+        self.batch_size = kwargs.pop("batch_size", 1000 * 1000 * 100)
+        # self.cache_limits = kwargs.pop("cache_limits", 500)
+        # 这里要求程序运行线程必须大于5(有5个写进程),这里限制为8
+        self.thread = get_threads(kwargs.pop("thread", 8), min_limit=8)
+        self.library_info = LibraryInfo(
+            chemistry_name, chemistry_config, pattern,
+            barcode_n_mismatch=kwargs.get("n_allow_for_barcode", 1),
+            link_n_mismatch=kwargs.get("n_allow_for_link", 2)
+        )
 
-        self.fq1_list = fq1.split(",")
-        self.fq2_list = fq2.split(",")
-        self.fq_num = len(self.fq1_list)
-        if self.fq_num != len(self.fq2_list):
-            raise Exception('fq1 and fq2 must be the same file number!')
+        self.validators = Validators(
+            n_polyt=self.library_info.n_T,
+            batch_size=self.batch_size, **kwargs
+        )
+        # 用于统计的属性
+        self.stat_info = StatInfo()
 
-    def _run(self, fq1, fq2):
-        for e1, e2 in zip(reader(fq1), reader(fq2)):
-            # header1, seq1, _, qual = e1
-            # header2, seq2, _, qual = e2
-            self.barcode_splitter.process_reads_pair(e1, e2)
+    def update_stat_info(self, stat_info: StatInfo):
+        self.stat_info.update(stat_info)
 
     @runtime(__name__)
     def run(self):
-        for i in range(self.fq_num):
-            self._run(self.fq1_list[i], self.fq2_list[i])
-            logger.info(f"{self.fq1_list[i]} finished.")
-        self.barcode_splitter.close_all()
+        with Pool(self.thread) as pool:
+            res = pool.imap(
+                partial(reads_processor, self.validators, self.library_info),
+                yield_batch_data(self.fq1, self.fq2, batch_size=self.batch_size))
+
+            for stat_info in res:
+                self.update_stat_info(stat_info)
+
+        # 运行完成，清除状态文件
+        if os.path.exists(self.validators.temp_state_file):
+            os.remove(self.validators.temp_state_file)
 
     @runtime(f"{__name__}.collect_matrix")
     def collect_matrix(self):
-        bs = self.barcode_splitter
-        num_total = bs.num_total
-        clean_num = bs.num
-        logger.info(f"processed reads: {fmt_number(num_total)}. "
-                    f"valid reads: {fmt_number(bs.num)}.")
-        if bs.checker4polyt.need_valid:
-            logger.info(f"no polyT reads number : {bs.checker4polyt.num}")
+        num_total = self.stat_info.total_num
+        clean_num = self.stat_info.clean_num
+        qual_counter_umi = self.stat_info.qual_counter_umi
+        qual_counter_read = self.stat_info.qual_counter_read
+        qual_counter_barcode = self.stat_info.qual_counter_barcode
+
+        # print("clean_num", clean_num)
+        # print("num_total", num_total)
+        # print("checker4polyt", self.stat_info.num_for_no_polyt)
+        # print("checker4barcode", self.stat_info.num_for_no_barcode)
+        # print("checker4link", self.stat_info.num_for_no_link)
+        # print("checker4low_qual", self.stat_info.num_for_low_qual)
+
+        params_polyt = self.validators.params_polyt
+        params_link = self.validators.params_link
+        params_barcode = self.validators.params_barcode
+        params_qual = self.validators.params_qual
+        if params_polyt.use_polyt_valid_reads:
+            logger.info(f"no polyT reads number : {self.stat_info.num_for_no_polyt}")
         else:
             logger.info(f"not valid polyT。")
-        if bs.checker4link.need_valid:
-            logger.info(f"no_linker : {bs.checker4link.num}")
+        if params_link.use_link_valid_reads:
+            logger.info(f"no_linker : {self.stat_info.num_for_no_link}")
         else:
             logger.info(f"not valid linker。")
-        if bs.checker4barcode.need_valid:
-            logger.info(f"no_barcode : {bs.checker4barcode.num}")
+        if params_barcode.use_barcode_valid_reads:
+            logger.info(f"no_barcode : {self.stat_info.num_for_no_barcode}")
         else:
             logger.info(f"not valid barcode。")
-        if bs.checker4qual.need_valid:
-            logger.info(f"low qual reads number: {bs.checker4qual.num}")
+        if params_qual.use_qual_valid_reads:
+            logger.info(f"low qual reads number: {self.stat_info.num_for_low_qual}")
         else:
             logger.info(f"not valid qual。")
         if clean_num == 0:
@@ -77,25 +105,23 @@ class BarcodeSplitterRunner(BaseReportRunner):
             raise Exception(
                 'no valid reads found! please check the --chemistry parameter.')
 
-        BarcodesQ30 = sum([bs.qual_counter_barcode[k] for k in bs.qual_counter_barcode
-                           if k >= bs.checker4qual.ord2chr(
-                30)]) / float(sum(bs.qual_counter_barcode.values())) * 100
+        BarcodesQ30 = sum([qual_counter_barcode[k] for k in qual_counter_barcode
+                           if k >= chr(30 + 33)]) / float(sum(qual_counter_barcode.values())) * 100
         BarcodesQ30 = round(BarcodesQ30, 2)
         BarcodesQ30_display = f'{BarcodesQ30}%'
-        UMIsQ30 = sum([bs.qual_counter_umi[k] for k in bs.qual_counter_umi
-                       if k >= bs.checker4qual.ord2chr(
-                30)]) / float(sum(bs.qual_counter_umi.values())) * 100
+        UMIsQ30 = sum([qual_counter_umi[k] for k in qual_counter_umi
+                       if k >= chr(30 + 33)]) / float(sum(qual_counter_umi.values())) * 100
         UMIsQ30 = round(UMIsQ30, 2)
         UMIsQ30_display = f'{UMIsQ30}%'
 
         ReadQ30 = sum(
-            [bs.qual_counter_read[k] for k in bs.qual_counter_read
-             if k >= bs.checker4qual.ord2chr(30)]
-        ) / float(sum(bs.qual_counter_read.values())) * 100
+            [qual_counter_read[k] for k in qual_counter_read
+             if k >= chr(30 + 33)]
+        ) / float(sum(qual_counter_read.values())) * 100
         ReadQ30 = round(ReadQ30, 2)
         ReadQ30_display = f'{ReadQ30}%'
 
-        logger.info(f"Raw Reads {bs.num_total}")
+        logger.info(f"Raw Reads {num_total}")
         logger.info(f"Valid Reads {round(clean_num / num_total * 100, 2)}%")
         logger.info(f"Q30 of Barcodes {BarcodesQ30}, display {BarcodesQ30_display}")
         logger.info(f"Q30 of Read {ReadQ30}, display {ReadQ30_display}")

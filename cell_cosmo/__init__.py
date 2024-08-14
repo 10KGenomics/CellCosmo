@@ -7,10 +7,10 @@
 @Version    : 1.0
 @Desc       : None
 """
-import os
+from pathlib import Path
 
-__VERSION__ = "1.0.12"
+__VERSION__ = "1.1.0"
 __version__ = __VERSION__
 
-ROOT_PATH = os.path.dirname(__file__)
-PACKAGE_NAME = os.path.basename(ROOT_PATH)
+ROOT_PATH = Path(__file__).parent
+PACKAGE_NAME = ROOT_PATH.name

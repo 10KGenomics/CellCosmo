@@ -93,7 +93,7 @@ class Analysis(ScanpyWrapper):
                 'id': f"{name}_marker_genes"}
             self.add_data(**{name: plot_dict})
 
-        # todo 流程的最后一步，添加清理大文件的逻辑
+        # 新增需求: 流程的最后一步，添加清理大文件的逻辑
         clean_type = os.getenv("CELLCOSMO_LARGE_FILE_CLEAN_STRATEGY", 1)
         if str(clean_type) == '1':
             need_clean_files = [

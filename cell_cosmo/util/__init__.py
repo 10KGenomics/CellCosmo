@@ -13,3 +13,4 @@ from cell_cosmo.util.reader import reader
 from cell_cosmo.util.get_logger import get_logger
 from .BAM2TableUtil import bam2count_table
 from . import PathUtil
+from .get_threads import get_threads

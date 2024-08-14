@@ -96,6 +96,7 @@ class PipeLineConfigParser(ConfigParser):
 
         val = self.get(sec, m.option)
         val = self._clean_val(val)
+
         if val == "" and m.required:
             raise Exception(f"{sec}.{m.option} is required,but get empty!")
         if m.is_flag:
@@ -115,6 +116,8 @@ class PipeLineConfigParser(ConfigParser):
         else:
             if val and val != m.default:
                 # 该参数设置了,并且不是默认值,则拼接到命令行
+                if ' ' in val:
+                    val = f"'{val}'"  # 对含空格的参数,包裹引号
                 return [m.cmd_prefix, val]
         return []
 

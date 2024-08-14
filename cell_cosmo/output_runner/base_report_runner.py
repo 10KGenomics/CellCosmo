@@ -322,6 +322,34 @@ class BaseReportRunner(BaseRunner):
         self.__content_dict['data'] = dict(sorted(data.items(), key=lambda x: sort_list.index(x[0])))
         self.__content_dict['metrics'] = dict(sorted(metrics.items(), key=lambda x: sort_list.index(x[0])))
 
+    def process_starsolo_demultiplexing_step(self):
+        """starsolo中转换barcode报告指标结果"""
+        # key1, key2 = [f"{key1}_summary", f"{key2}_summary"]
+        data = self.__content_dict['data']
+        metrics = self.__content_dict['metrics']
+        if "barcode_summary" in data:
+            data['sequence_summary'] = {
+                'display_title': 'Sequencing',
+                'metric_list': data['barcode_summary'].get('metric_list', [])
+            }
+            del data['barcode_summary']
+        if "barcode_summary" in metrics:
+            metrics['sequence_summary'] = metrics['barcode_summary']
+            del metrics['barcode_summary']
+
+        # 为了保证合并后数据的顺序，这里重新对字典进行排序
+        sort_list = [
+            'sample_summary',
+            'sequence_summary',
+            'star_summary',
+            'featureCounts_summary',
+            'count_summary',
+            'analysis_summary',
+            'summary_summary',
+        ]
+        self.__content_dict['data'] = dict(sorted(data.items(), key=lambda x: sort_list.index(x[0])))
+        self.__content_dict['metrics'] = dict(sorted(metrics.items(), key=lambda x: sort_list.index(x[0])))
+
     def set_summary_step(self):
         data = self.__content_dict['data']
         metrics = self.__content_dict['metrics']

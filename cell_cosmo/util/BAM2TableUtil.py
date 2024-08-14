@@ -55,7 +55,7 @@ def bam2count_table(bam, out_prefix) -> pd.DataFrame:
     pysam.set_verbosity(save)
     data = []
     # bam 文件经过name排序,这里迭代出来barcode相同的一批数据
-    for barcode, g in tqdm(groupby(sam_file, key_func), desc="load bam:"):
+    for barcode, g in tqdm(groupby(iter(sam_file), key_func), desc="load bam:"):
         if barcode == before_barcode:
             raise Exception(f"the bam file {bam} must sort by name,"
                             f"and seq name start with `@barcode_umi...`")

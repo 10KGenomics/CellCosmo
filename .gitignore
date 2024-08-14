@@ -130,3 +130,5 @@ refact_test_code/
 tt
 data
 result
+*.sqlite
+update_package.py

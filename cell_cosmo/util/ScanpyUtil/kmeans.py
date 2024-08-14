@@ -48,7 +48,8 @@ def kmeans(self):
         for axis_type, df in {'umap': df_umap, 'tsne': df_tsne}.items():
             for k, feature in enumerate(KMEANS_FEATURE_NAMES, start=KMEANS_FEATURE_START):
                 feature_name = assemble_cluster_key(axis_type, feature)
-                groups = KMeans(n_clusters=k, random_state=random_state).fit_predict(df)
+                # add n_init='auto', to disable future_warning
+                groups = KMeans(n_clusters=k, random_state=random_state, n_init='auto').fit_predict(df)
                 self.adata.obs[feature_name] = pd.Categorical(
                     values=groups.astype('U'),
                     categories=natsorted(map(str, np.unique(groups))),

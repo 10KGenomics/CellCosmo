@@ -7,14 +7,15 @@
 @Version    : 1.0
 @Desc       : None
 """
+import os
 import click
 import typing as t
-from click import Context, Command
 import itertools
-import os
 import importlib
+from pathlib import Path
+from click import Context, Command
 
-COMMANDS_PACKAGE = os.path.dirname(__file__)
+COMMANDS_PACKAGE = Path(__file__).parent
 
 
 class BaseCli(click.MultiCommand):
@@ -26,7 +27,7 @@ class BaseCli(click.MultiCommand):
         self._init_cmds()
 
     def list_commands(self, ctx: Context) -> t.List[str]:
-        return itertools.chain(self._builtin_cmds)
+        return list(itertools.chain(self._builtin_cmds))
 
     def get_command(self, ctx: Context, cmd_name: str) -> t.Optional[Command]:
         return self._builtin_cmds[cmd_name]
@@ -34,7 +35,7 @@ class BaseCli(click.MultiCommand):
     def _init_cmds(self):
         if self.__package_name__ is None:
             raise Exception("the subclass must init `__package_name__`!")
-        commands_path = os.path.join(COMMANDS_PACKAGE, self.__package_name__)
+        commands_path = COMMANDS_PACKAGE / self.__package_name__
         for filename in os.listdir(commands_path):
             if filename == "__init__.py" or not filename.endswith(".py"):
                 continue

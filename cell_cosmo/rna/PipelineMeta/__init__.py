@@ -15,6 +15,7 @@ from cell_cosmo.rna.PipelineMeta.MetaFeatureCounts import MetaFeatureCounts
 from cell_cosmo.rna.PipelineMeta.MetaMkRef import MetaMkRef
 from cell_cosmo.rna.PipelineMeta.MetaSample import MetaSample
 from cell_cosmo.rna.PipelineMeta.MetaStar import MetaStar
+from cell_cosmo.rna.PipelineMeta.MetaStarsolo import MetaStarsolo
 
 __all__ = [
     "MetaAnalysis",
@@ -25,4 +26,5 @@ __all__ = [
     "MetaMkRef",
     "MetaSample",
     "MetaStar",
+    "MetaStarsolo",
 ]

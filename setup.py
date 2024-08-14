@@ -33,7 +33,7 @@ setup(
     # 需要安装的依赖
     # install_requires=[],
     # package_dir={"": "src"},
-    packages=find_packages(),
+    packages=find_packages(exclude=["update_package.py"]),
     # package_data={"": ["*.*"]},
     include_package_data=True,
     entry_points={'console_scripts': ['CellCosmo=cell_cosmo.__main__:cli', ]},

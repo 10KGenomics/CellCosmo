@@ -8,6 +8,7 @@
 @Desc       : None
 """
 import os
+import time
 import logging
 import subprocess
 from cell_cosmo.util import GenomeUtil, PathUtil
@@ -21,7 +22,6 @@ from cell_cosmo.rna.PipelineMeta import (
     MetaStar as S4,
     MetaAnalysis as S7,
 )
-from configparser import ConfigParser
 from cell_cosmo.rna.PipelineMeta.CMDMeta import CMDMeta, CMDBase, PipeLineConfigParser
 
 logger = logging.getLogger(__name__)
@@ -78,6 +78,7 @@ class Pipeline:
 
     def run(self):
         for cmd in self._cmds:
+
             logger.info(f"Run: {cmd}")
             if "CellCosmo rna mkref" in str(cmd):
                 # 此时需要切换目录:

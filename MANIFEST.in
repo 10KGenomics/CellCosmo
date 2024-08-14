@@ -1,3 +1,4 @@
 graft cell_cosmo/output_runner/templates
 recursive-include cell_cosmo/cc_data/ *
 include *.txt cell_cosmo/*.cfg
+exclude example/* *.sqlite test/*
