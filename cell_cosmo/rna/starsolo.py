@@ -193,6 +193,8 @@ class Starsolo(_O):
             cmd.append(f"--outSAMtype {self.outSAMtype}")
             if self.SAM_attributes is not None:
                 cmd.append(f"--outSAMattributes {self.SAM_attributes}")
+        else:
+            cmd.append(f"--outSAMtype None")
 
         if self.fq1[-3:] == ".gz":
             # 苹果电脑 zcat 异常

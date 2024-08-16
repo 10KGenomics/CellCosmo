@@ -9,7 +9,7 @@
 """
 from pathlib import Path
 
-__VERSION__ = "1.1.0"
+__VERSION__ = "1.1.1"
 __version__ = __VERSION__
 
 ROOT_PATH = Path(__file__).parent
