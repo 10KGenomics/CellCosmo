@@ -1,6 +1,19 @@
-# Make a rna genomeDir
+# Make an rna genomeDir
 
-- Construction of human reference genome
+- Construction of human reference genome using 10x reference(recommended)
+
+```bash
+mkdir GRCh38_index
+cd GRCh38_index
+
+wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCh38-2020-A.tar.gz
+tar -xzvf refdata-gex-GRCh38-2020-A.tar.gz
+
+CellCosmo rna mkref --gtf refdata-gex-GRCh38-2020-A/genes/genes.gtf \
+--genome-name GRCh38 \
+--fasta refdata-gex-GRCh38-2020-A/fasta/genome.fa \
+```
+- Construction of human reference genome from ensembl
 - Remarks：If there is gene_name in the gtf file, you can add the "--gene-name-as-name2" parameter in the "CellCosmo rna mkref" directive. If there is only "gene_id", you will not add the parameter.
 
 ```bash
@@ -18,7 +31,20 @@ CellCosmo rna mkref --gtf Homo_sapiens.GRCh38.99.gtf \
 --fasta Homo_sapiens.GRCh38.dna.primary_assembly.fa \
 --gene-name-as-name2
 ```
-- Construction of mouse reference genome
+- Construction of mouse reference genome using 10x reference(recommended)
+
+```
+mkdir GRCm38_index
+cd GRCm38_index
+
+wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz
+tar -xzvf refdata-gex-mm10-2020-A.tar.gz
+
+CellCosmo rna mkref --gtf refdata-gex-mm10-2020-A/genes/genes.gtf \
+--genome-name GRCm38 \
+--fasta refdata-gex-mm10-2020-A/fasta/genome.fa \
+```
+- Construction of mouse reference genome from ensembl
 
 ```
 mkdir GRCm38_ensembl_index
@@ -35,4 +61,3 @@ CellCosmo rna mkref --gtf Mus_musculus.GRCm38.99.gtf \
 --fasta Mus_musculus.GRCm38.dna.primary_assembly.fa \
 --gene-name-as-name2
 ```
-

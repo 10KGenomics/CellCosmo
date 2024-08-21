@@ -19,29 +19,21 @@ Build References genomeDir tutorial manual [here](docs/Build_References_genomeDi
 ## 2.Generate configuration file(rna_pipeline.cfg)
 Run the following command to get the cfg file:
 ```bash
-CellCosmo rna pipeline -g
+CellCosmo rna pipeline -t starsolo -g 
 ```
-* Detailed configuration documentation[`rna_pipeline.cfg`](docs/rna/rna_pipeline.cfg)
+* Detailed configuration documentation[`rna_starsolo_pipeline.cfg`](docs/rna/rna_pipeline.cfg)
 * If already established References  genomeDir and Kit version1 default, You can apply the simplified version of configuration documentation[`rna_pipeline_sv.cfg`](docs/rna/rna_pipeline_sv.cfg)
 ## 3.Run pipeline
 ```bash
-CellCosmo rna pipeline -c rna_pipeline.cfg
+CellCosmo rna pipeline -t starsolo -c rna_pipeline.cfg
 ```
 
 ## 4.Detailed docs can be found in manual
 * (1) Sample sequencing data preparation  
   [CellCosmo rna sample](docs/rna/sample.md)  
-* (2) Demultiplexing FASTQ files with barcode  
-  [CellCosmo rna barcode](docs/rna/barcode.md)  
-* (3) RNA sequence Quality control  
-  [CellCosmo rna cutadapt](docs/rna/cutadapt.md)  
-* (4) Rna alignment  
-  [CellCosmo rna star](docs/rna/star.md)  
-* (5) Quantification of gene  
-  [CellCosmo rna featureCounts](docs/rna/featureCounts.md)  
-* (6) Cell calling  
-  [CellCosmo rna count](docs/rna/count.md)  
-* (7) Cell cluster and web report result output  
+* (2) Rna alignment
+  [CellCosmo rna starsolo](docs/rna/starsolo.md)
+* (3) Cell cluster and web report result output  
   [CellCosmo rna analysis](docs/rna/analysis.md)  
 
 # Support
